@@ -13,6 +13,8 @@
         1,
         null,
         1,
+        null,
+        null,
         null
       ],
       "/Users/apprentice/drafthacker/app/controllers/application_controller.rb": [
@@ -36,7 +38,13 @@
       ],
       "/Users/apprentice/drafthacker/app/controllers/drafts_controller.rb": [
         1,
+        null,
         1,
+        null,
+        null,
+        null,
+        1,
+        null,
         null,
         null
       ],
@@ -110,6 +118,6 @@
         null
       ]
     },
-    "timestamp": 1344381540
+    "timestamp": 1344383656
   }
 }
