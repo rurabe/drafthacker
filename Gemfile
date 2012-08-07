@@ -10,6 +10,9 @@ gem 'pg', '~> 0.14.0'
 group :test, :development do
 	gem 'rspec-rails', '~> 2.11.0'
 	gem 'quiet_assets', '~> 1.0.1'
+	gem 'capybara', '~> 1.1.2'
+	gem 'faker', '~> 1.0.1'
+	gem 'fabricator', '~> 0.0.5'
 end
 
 # Gems used only for assets and not required
