@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120807034017) do
+ActiveRecord::Schema.define(:version => 20120807221602) do
 
   create_table "drafts", :force => true do |t|
     t.integer  "user_id"
@@ -23,14 +23,35 @@ ActiveRecord::Schema.define(:version => 20120807034017) do
 
   add_index "drafts", ["user_id"], :name => "index_drafts_on_user_id"
 
+  create_table "picks", :force => true do |t|
+    t.integer  "player_id"
+    t.integer  "team_id"
+    t.integer  "round_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "picks", ["player_id"], :name => "index_picks_on_player_id"
+  add_index "picks", ["round_id"], :name => "index_picks_on_round_id"
+  add_index "picks", ["team_id"], :name => "index_picks_on_team_id"
+
   create_table "players", :force => true do |t|
     t.string   "name"
     t.integer  "team_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "type"
   end
 
   add_index "players", ["team_id"], :name => "index_players_on_team_id"
+
+  create_table "rounds", :force => true do |t|
+    t.integer  "draft_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "rounds", ["draft_id"], :name => "index_rounds_on_draft_id"
 
   create_table "teams", :force => true do |t|
     t.string   "name"

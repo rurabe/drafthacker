@@ -1,0 +1,2 @@
+class DefenseSpecialTeams < FootballPlayer
+end

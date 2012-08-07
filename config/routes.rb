@@ -3,6 +3,8 @@ Drafthacker::Application.routes.draw do
   devise_for :users
 
   resources :draft, :only => :show
+  resources :team, :only => [:new, :create, :edit, :update, :show , :index]
+  resources :player, :only => [:show, :index]
 
   root :to => "drafts#show"
 

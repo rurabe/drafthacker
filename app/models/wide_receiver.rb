@@ -1,0 +1,2 @@
+class WideReceiver < FootballPlayer
+end
