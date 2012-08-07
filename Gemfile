@@ -5,8 +5,12 @@ gem 'rails', '3.2.7'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'pg'
+gem 'pg', '~> 0.14.0'
 
+group :test, :development do
+	gem 'rspec-rails', '~> 2.11.0'
+	gem 'quiet_assets', '~> 1.0.1'
+end
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -20,7 +24,7 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
-gem 'jquery-rails'
+gem 'jquery-rails', '~> 2.0.2'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
