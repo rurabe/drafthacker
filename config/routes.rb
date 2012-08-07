@@ -2,7 +2,7 @@ Drafthacker::Application.routes.draw do
 
   devise_for :users
 
-  resources :draft, only => [:show
+  resources :draft, :only => [:show]
 
   root :to => "drafts#show"
   
