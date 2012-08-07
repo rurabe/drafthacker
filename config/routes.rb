@@ -2,7 +2,9 @@ Drafthacker::Application.routes.draw do
 
   devise_for :users
 
-  # root :to => "user#index"
+  resources :draft, only => [:show
+
+  root :to => "drafts#show"
   
   # The priority is based upon order of creation:
   # first created -> highest priority.
