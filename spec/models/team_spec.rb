@@ -6,7 +6,7 @@ describe Team do
 
   context 'name attribute' do
     it 'can be mass assigned' do
-      expect{ Team.create(:name => "Badass") }.to_not raise_error("ActiveModel::MassAssignmentSecurity::Error: Can\'t mass-assign protected attributes: name")
+      expect{ Team.create(:name => "Badass" + Faker::Lorem.words.first ) }.to_not raise_error("ActiveModel::MassAssignmentSecurity::Error: Can\'t mass-assign protected attributes: name")
     end
 
     it "is unique"
@@ -18,6 +18,6 @@ describe Team do
 
     it 'cannot be null'
 
-    it 'belongs to one user'
+    it 'belongs to only one user'
   end
 end
