@@ -1,0 +1,2 @@
+class Linebacker < FootballPlayer
+end

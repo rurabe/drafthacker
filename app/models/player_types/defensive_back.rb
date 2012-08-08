@@ -1,0 +1,2 @@
+class DefensiveBack < FootballPlayer
+end

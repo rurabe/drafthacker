@@ -1,0 +1,2 @@
+class DefensiveLineman < FootballPlayer
+end
