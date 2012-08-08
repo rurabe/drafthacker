@@ -16,7 +16,7 @@ group :test, :development do
   gem 'faker', '~> 1.0.1'
   gem 'fabricator', '~> 0.0.5'
   gem 'shoulda', '~> 3.1.1', :require => false
-  gem 'thin', '~> 1.4.1'
+  #gem 'thin', '~> 1.4.1'
   gem 'guard', '~> 1.3.0'
   gem 'guard-rspec', '~> 1.2.1'
   gem 'launchy', '~> 2.1.2'
