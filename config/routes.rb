@@ -6,7 +6,7 @@ Drafthacker::Application.routes.draw do
   resources :team, :only => [:new, :create, :edit, :update, :show , :index]
   resources :player, :only => [:show, :index]
 
-  root :to => "devise/sessions#new"
+  root :to => "drafts#show"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
