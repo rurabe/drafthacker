@@ -1,5 +1,7 @@
 require 'spec_helper'
 
 describe League do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it { should belong_to :draft }
+  it { should have_many :teams }
+  
 end

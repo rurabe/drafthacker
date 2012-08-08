@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120808000919) do
+ActiveRecord::Schema.define(:version => 20120808004619) do
 
   create_table "drafts", :force => true do |t|
     t.integer  "user_id"
@@ -24,10 +24,31 @@ ActiveRecord::Schema.define(:version => 20120808000919) do
   add_index "drafts", ["user_id"], :name => "index_drafts_on_user_id"
 
   create_table "leagues", :force => true do |t|
-    t.string   "name"
     t.integer  "draft_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+    t.integer  "regular_season_periods"
+    t.integer  "playoff_periods"
+    t.string   "season_status"
+    t.string   "name"
+    t.string   "draft_type"
+    t.integer  "num_divisions"
+    t.integer  "uses_keepers"
+    t.integer  "num_teams"
+    t.string   "commish_type"
+    t.boolean  "use_robot"
+    t.time     "time"
+    t.date     "date"
+    t.string   "order_type"
+    t.string   "order_source"
+    t.integer  "auction_supplemental_rounds"
+    t.integer  "timer_start"
+    t.boolean  "pick_email"
+    t.string   "draft_event_type"
+    t.string   "draft_schedule"
+    t.integer  "rounds"
+    t.integer  "time_limit"
+    t.integer  "timer_end"
   end
 
   add_index "leagues", ["draft_id"], :name => "index_leagues_on_draft_id"
