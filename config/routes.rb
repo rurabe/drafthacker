@@ -7,7 +7,7 @@ Drafthacker::Application.routes.draw do
   resources :team, :only => [:new, :create, :edit, :update, :show , :index]
   resources :player, :only => [:show, :index]
 
-  root :to => "static_pages#index"
+  root :to => "drafts#index"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

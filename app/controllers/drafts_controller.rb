@@ -1,10 +1,11 @@
 class DraftsController < ApplicationController
 
-	def new
+  def show
 
-	end
+  end
 
-	def show
-	
-	end
+  def index
+
+  end
+
 end
