@@ -1,10 +1,11 @@
 require 'spec_helper'
 
 describe Team do
+
+  it { should have_many :slots }
+
   @name = Faker::Name.name
   let (:team) {Team.new(:name => @name)}
-
-  it 'has many players'
 
   context 'name attribute' do
     it 'can be mass assigned' do

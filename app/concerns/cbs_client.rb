@@ -24,25 +24,25 @@ require 'open-uri'
         }
 
       @opts = {
-        "D" => Defense.create(attributes),
-        "DB" => DefensiveBack.create(attributes),
-        "DL" => DefensiveLineman.create(attributes),
-        "DST" => DefenseSpecialTeams.create(attributes),
-        "K" => Kicker.create(attributes),
-        "LB" => Linebacker.create(attributes),
-        "QB" => Quarterback.create(attributes),
-        "RB" => RunningBack.create(attributes),
-        "ST" => SpecialTeams.create(attributes),
-        "TE" => TightEnd.create(attributes),
-        "TQB" => TeamQuarterback.create(attributes),
-        "WR" => WideReceiver.create(attributes)
+        "D" => Defense.create(@attributes),
+        "DB" => DefensiveBack.create(@attributes),
+        "DL" => DefensiveLineman.create(@attributes),
+        "DST" => DefenseSpecialTeams.create(@attributes),
+        "K" => Kicker.create(@attributes),
+        "LB" => Linebacker.create(@attributes),
+        "QB" => Quarterback.create(@attributes),
+        "RB" => RunningBack.create(@attributes),
+        "ST" => SpecialTeams.create(@attributes),
+        "TE" => TightEnd.create(@attributes),
+        "TQB" => TeamQuarterback.create(@attributes),
+        "WR" => WideReceiver.create(@attributes)
       }
 
       all_players.each do |player|
         key = player(:position)
           player.each do |k, v|
-            attributes = {}
-            attributes[@conversion_hash[k]] = player[k]
+            @attributes = {}
+            @attributes[@conversion_hash[k]] = player[k]
           end
         @opts[key]
       end
