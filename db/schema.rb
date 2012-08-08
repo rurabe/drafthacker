@@ -66,11 +66,23 @@ ActiveRecord::Schema.define(:version => 20120808043851) do
   add_index "picks", ["team_id"], :name => "index_picks_on_team_id"
 
   create_table "players", :force => true do |t|
-    t.string   "name"
     t.integer  "team_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
     t.string   "type"
+    t.integer  "cbs_id"
+    t.string   "first_name"
+    t.string   "full_name"
+    t.string   "icons_headline"
+    t.string   "icons_injury"
+    t.string   "last_name"
+    t.string   "on_waivers"
+    t.string   "primary_position"
+    t.string   "pro_status"
+    t.string   "pro_team"
+    t.string   "bye_week"
+    t.string   "is_locked"
+    t.string   "opponent"
   end
 
   add_index "players", ["team_id"], :name => "index_players_on_team_id"
