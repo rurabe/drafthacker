@@ -1,8 +1,8 @@
 Drafthacker::Application.routes.draw do
 
-  devise_for :users
 
-  resources :static_pages, :only => :index 
+
+  resources :static_pages, :only => :index
   resources :draft, :only => :show
   resources :team, :only => [:new, :create, :edit, :update, :show , :index]
   resources :player, :only => [:show, :index]

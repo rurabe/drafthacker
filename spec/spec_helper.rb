@@ -8,9 +8,6 @@ require 'rspec/autorun'
 require 'shoulda'
 require 'capybara/rspec'
 
-RSpec.configure do |config|
-  config.include Devise::TestHelpers, :type => :controller
-end
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
