@@ -1,0 +1,2 @@
+class TeamQuarterback < FootballPlayer
+end

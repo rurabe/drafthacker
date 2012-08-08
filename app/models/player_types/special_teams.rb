@@ -1,0 +1,2 @@
+class SpecialTeams < FootballPlayer
+end
