@@ -3,4 +3,16 @@ class Draft < ActiveRecord::Base
   has_one :league
   attr_accessible :name, :start_time
   validates_presence_of :user_id
+
+  after_create :create_league
+
+
+  private
+
+    def create_league
+      league = self.build_league
+      unless league.save
+        raise "after_create failed to build a new league from the Draft class"
+      end
+    end
 end
