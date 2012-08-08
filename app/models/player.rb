@@ -1,5 +1,5 @@
 class Player < ActiveRecord::Base
-  belongs_to :team
+  belongs_to :slot
   attr_accessible :cbs_id,
                   :first_name,
                   :full_name,
