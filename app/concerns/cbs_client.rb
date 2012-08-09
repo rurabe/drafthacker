@@ -3,8 +3,23 @@ module CbsClient
 require 'JSON'
 require 'open-uri'
 
-  class Populator
-    def players
+  def build_mega_hash
+    {:user => @@cbs_id,
+      :drafts_attributes =>
+        [
+          {
+            :league_attributes =>
+                build_hash_league_details.merge(build_hash_draft_config).merge(
+                :teams_attributes => build_hash_fantasy_teams),
+            :rounds_attributes =>
+              build_hash_draft_order
+          }
+        ]
+    }
+  end
+
+ 
+    def populate_players
       parsed_data = parse('http://api.cbssports.com/fantasy/players/list?SPORT=football&response_format=JSON')
       all_players = parsed_data[:body][:players]
 
@@ -30,7 +45,7 @@ require 'open-uri'
       end
     end
 
-private
+  private
 
     def convert_keys(hash, key_conversion_hash)
       new_hash = {}
@@ -72,7 +87,76 @@ private
       data = open(path).read
       JSON.parse(data, :symbolize_names => true)
     end
-  end
+
+    # Some Shit
+    def get_params(access_token,cbs_id)
+      @@access_token = access_token
+      @@cbs_id = cbs_id
+
+      build_mega_hash
+    end
+
+    def build_hash_league_details
+      response = json_response('league/details')[:body][:league_details]
+      response[:commish_type] = response[:type]
+      response.delete :type
+      @@league_details = response
+    end
+
+    def build_hash_draft_config
+      response = json_response('league/draft/config')[:body][:draft]
+      response[:draft_event_type] = response[:type]
+      response.delete :type
+      @@draft_config = response
+    end
+
+    def build_hash_draft_order
+      response = json_response('league/draft/order')[:body][:draft_order][:picks]
+      rounds = []
+      @@draft_config[:rounds].to_i.times do |i|
+        rounds << { :number => i+1, :picks_attributes =>  response.select { |pick| pick[:round] == i+1 } }
+      end
+      rounds
+    end
+
+    def build_hash_fantasy_teams
+      response = json_response('league/teams')[:body][:teams]
+      new_hash = {}
+      response.map! do |team|
+        team.merge build_slots_array
+      end
+      response
+    end
+
+    def build_hash_league_rules
+      json_response('league/rules')[:body][:rules]
+    end
+
+    def build_slots_array
+      response = build_hash_league_rules
+      slots_array = []
+      response[:roster][:positions].each do |hash|
+        hash[:max_active].to_i.times do
+          slots_array << { :eligible_position => hash[:abbr] }
+        end
+      end
+      response[:roster][:statuses][1][:max].to_i.times do
+        slots_array << { :eligible_position => "RS" }
+      end
+      { :slots_attributes => slots_array }
+    end
+
+    def json_response(api_call)
+      JSON.parse(read_response(api_call), :symbolize_names => true)
+    end
+
+    def read_response(api_call)
+      open(build_url(api_call)).read
+    end
+
+    def build_url(api_call)
+      "http://api.cbssports.com/fantasy/#{api_call}?access_token=#{@@access_token}&response_format=JSON"
+    end
 end
 
 # def rounds_and_picks

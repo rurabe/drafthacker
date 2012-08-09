@@ -5,15 +5,6 @@ class Team < ActiveRecord::Base
   has_many    :players, :through => :slots
   has_many    :picks
 
-  attr_accessible :name
-  validates :name, :uniqueness => true
-  validates :user_id, :presence => true
-
-  after_save :create_slots
-
-  def create_slots
-    self.league.rounds.times do
-      self.slots.create
-    end
-  end
+  attr_accessible :name, :slots_attributes
+  accepts_nested_attributes_for :slots
 end
