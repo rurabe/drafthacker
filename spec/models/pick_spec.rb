@@ -1,5 +1,8 @@
 require 'spec_helper'
 
 describe Pick do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it { should belong_to :round}
+  it { should belong_to :player}
+  it { should belong_to :team}
+
 end

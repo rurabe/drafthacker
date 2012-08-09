@@ -1,5 +1,9 @@
 class Player < ActiveRecord::Base
-  belongs_to :slot
+  has_many :slots
+  has_many :teams, :through => :slots
+  has_many :picks
+
+                  #cbs players api data:
   attr_accessible :cbs_id,
                   :first_name,
                   :full_name,
@@ -12,8 +16,7 @@ class Player < ActiveRecord::Base
                   :pro_team,
                   :bye_week,
                   :is_locked,
-                  :opponent,
-                  :team_id
+                  :opponent
 
 
 
