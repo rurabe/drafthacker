@@ -7,6 +7,7 @@ gem 'jquery-rails', '~> 2.0.2'
 #gem 'json', '~> 1.7.4'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
+gem 'thin', '~> 1.4.1'
 
 group :test, :development do
   gem 'simplecov', '~> 0.6.4'
@@ -16,7 +17,7 @@ group :test, :development do
   gem 'faker', '~> 1.0.1'
   gem 'fabricator', '~> 0.0.5'
   gem 'shoulda', '~> 3.1.1', :require => false
-  # gem 'thin', '~> 1.4.1'
+
   gem 'guard', '~> 1.3.0'
   gem 'guard-rspec', '~> 1.2.1'
   gem 'launchy', '~> 2.1.2'
