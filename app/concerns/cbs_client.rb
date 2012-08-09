@@ -1,8 +1,5 @@
 module CbsClient
 
-require 'json'
-require 'open-uri'
-
   def get_params(access_token,cbs_id)
     @@access_token = access_token
     @@cbs_id = cbs_id
