@@ -1,8 +1,11 @@
 class Draft < ActiveRecord::Base
   belongs_to :user
   has_one :league
-  attr_accessible :name, :start_time, :league_attributes
-  validates_presence_of :user_id
+  has_many :rounds
 
-  accepts_nested_attributes_for :league
+  accepts_nested_attributes_for :league, :rounds
+  attr_accessible :name, :start_time, :league_attributes, :rounds_attributes
+
+
+
 end

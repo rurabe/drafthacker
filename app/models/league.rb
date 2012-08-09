@@ -1,6 +1,8 @@
 class League < ActiveRecord::Base
   belongs_to :draft
   has_many :teams
+
+  accepts_nested_attributes_for :teams
   attr_accessible :name,
                 #API data
                   :regular_season_periods,
@@ -25,9 +27,9 @@ class League < ActiveRecord::Base
                   :rounds,
                   :time_limit,
                   :timer_end,
-                  :team_attributes
+                  :teams_attributes
 
-  validates_presence_of :draft_id, :rounds, :num_teams
+  #validates_presence_of :rounds, :num_teams
 
-  accepts_nested_attributes_for :teams
+
 end
