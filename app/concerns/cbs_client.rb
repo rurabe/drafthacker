@@ -74,6 +74,73 @@ require 'open-uri'
       # parsed_position_data = JSON.parse(positions_data, :symbolize_names => true)
   end
 
-  class
+    # Some Shit
+    def get_params#(access_token,cbs_id)
+      @@access_token = "U2FsdGVkX18eAlAHs48KMkJOwSZuFyQY0cAKinkafQ9nG8p4AFzuCG14lXlV4pV-DAacLmwy7sToFRV5Sf7_DT8wyaedVv6TL_03czOPUFd4fNt9sJ-nWmTQsaOj88Br"
+      @@cbs_id = "b2c7c77e1b22e0f4"
+
+      # build_mega_hash
+      build_hash_draft_config.merge build_hash_league_details
+
+
+    end
+
+    private
+
+    # def build_mega_hash
+    #   {:user => @@cbs_id,
+    #     :drafts_attributes =>
+    #       [
+    #         {
+    #           :league_attributes =>
+    #           {
+    #             build_hash_league_details.merge build_hash_draft_config
+    #           },
+    #           :rounds_attributes =>
+    #           [
+    #             {
+    #               :picks_attributes =>
+    #               [
+    #                 {
+
+    #                 }
+    #               ]
+    #             }
+    #           ]
+    #         }
+    #       ]
+    #   }
+
+    # end
+
+    def build_hash_league_details
+      json_response('league/details')[:body][:league_details]
+    end
+
+    def build_hash_draft_config
+      response = json_response('league/draft/config')[:body][:draft]
+      response[:type] = response[:draft_event_type]
+      response[:type].delete
+    end
+
+    def build_hash_draft_order
+      json_response('league/draft/order')
+    end
+
+    def build_hash_fantasy_teams
+      json_response('league/teams')
+    end
+
+    def json_response(api_call)
+      JSON.parse(read_response(api_call), :symbolize_names => true)
+    end
+
+    def read_response(api_call)
+      open(build_url(api_call)).read
+    end
+
+    def build_url(api_call)
+      "http://api.cbssports.com/fantasy/#{api_call}?access_token=#{@@access_token}&response_format=JSON"
+    end
 end
 
