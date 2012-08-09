@@ -73,5 +73,7 @@ require 'open-uri'
       # positions_data = open('http://api.cbssports.com/fantasy/positions?SPORT=football&response_format=JSON').read
       # parsed_position_data = JSON.parse(positions_data, :symbolize_names => true)
   end
+
+  class
 end
 
