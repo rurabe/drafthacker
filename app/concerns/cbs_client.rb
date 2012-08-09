@@ -1,23 +1,11 @@
 module CbsClient
 
-require 'JSON'
-require 'open-uri'
+    def get_params(access_token,cbs_id)
+      @@access_token = access_token
+      @@cbs_id = cbs_id
 
-  def build_mega_hash
-    {:user => @@cbs_id,
-      :drafts_attributes =>
-        [
-          {
-            :league_attributes =>
-                build_hash_league_details.merge(build_hash_draft_config).merge(
-                :teams_attributes => build_hash_fantasy_teams),
-            :rounds_attributes =>
-              build_hash_draft_order
-          }
-        ]
-    }
-  end
-
+      build_mega_hash
+    end
  
     def populate_players
       parsed_data = parse('http://api.cbssports.com/fantasy/players/list?SPORT=football&response_format=JSON')
@@ -88,12 +76,19 @@ require 'open-uri'
       JSON.parse(data, :symbolize_names => true)
     end
 
-    # Some Shit
-    def get_params(access_token,cbs_id)
-      @@access_token = access_token
-      @@cbs_id = cbs_id
-
-      build_mega_hash
+    def build_mega_hash
+    {:user => @@cbs_id,
+      :drafts_attributes =>
+        [
+          {
+            :league_attributes =>
+                build_hash_league_details.merge(build_hash_draft_config).merge(
+                :teams_attributes => build_hash_fantasy_teams),
+            :rounds_attributes =>
+              build_hash_draft_order
+          }
+        ]
+    }
     end
 
     def build_hash_league_details

@@ -4,7 +4,7 @@ gem 'rails', '3.2.7'
 gem 'pg', '~> 0.14.0'
 # gem 'devise', '~> 2.1.2'
 gem 'jquery-rails', '~> 2.0.2'
-
+gem 'json', '~> 1.7.4'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
