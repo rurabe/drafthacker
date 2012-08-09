@@ -23,14 +23,14 @@
       <img src="./assets/0.5.3/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" style="display:none;">
-      <div class="timestamp">Generated <abbr class="timeago" title="2012-08-09T01:41:34-07:00">2012-08-09T01:41:34-07:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2012-08-09T15:19:34-07:00">2012-08-09T15:19:34-07:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
         <div class="file_list_container" id="AllFiles">
   <h2>
     <span class="group_name">All Files</span>
-    (<span class="covered_percent"><span class="red">29.31%</span></span>
+    (<span class="covered_percent"><span class="red">29.23%</span></span>
      covered at
      <span class="covered_strength">
        <span class="red">
@@ -41,9 +41,9 @@
   <a name="AllFiles"></a>
   <div>
     <b>2</b> files in total.
-    <b>58</b> relevant lines. 
-    <span class="green"><b>17</b> lines covered</span> and
-    <span class="red"><b>41</b> lines missed </span>
+    <b>65</b> relevant lines. 
+    <span class="green"><b>19</b> lines covered</span> and
+    <span class="red"><b>46</b> lines missed </span>
   </div>
   <table class="file_list">
     <thead>
@@ -61,11 +61,11 @@
       
       <tr>
         <td class="strong"><a href="#1c3ccc3fafe5a93ef194b8bfa48dd52541b9bf0b" class="src_link" title="app/concerns/cbs_client.rb">app/concerns/cbs_client.rb</a></td>
-        <td class="red strong">29.31 %</td>
+        <td class="red strong">29.23 %</td>
         <td>173</td>
-        <td>58</td>
-        <td>17</td>
-        <td>41</td>
+        <td>65</td>
+        <td>19</td>
+        <td>46</td>
         <td>0.3</td>
       </tr>
       
@@ -310,7 +310,7 @@
           <div class="file_list_container" id="Ungrouped">
   <h2>
     <span class="group_name">Ungrouped</span>
-    (<span class="covered_percent"><span class="red">29.31%</span></span>
+    (<span class="covered_percent"><span class="red">29.23%</span></span>
      covered at
      <span class="covered_strength">
        <span class="red">
@@ -321,9 +321,9 @@
   <a name="Ungrouped"></a>
   <div>
     <b>2</b> files in total.
-    <b>58</b> relevant lines. 
-    <span class="green"><b>17</b> lines covered</span> and
-    <span class="red"><b>41</b> lines missed </span>
+    <b>65</b> relevant lines. 
+    <span class="green"><b>19</b> lines covered</span> and
+    <span class="red"><b>46</b> lines missed </span>
   </div>
   <table class="file_list">
     <thead>
@@ -341,11 +341,11 @@
       
       <tr>
         <td class="strong"><a href="#1c3ccc3fafe5a93ef194b8bfa48dd52541b9bf0b" class="src_link" title="app/concerns/cbs_client.rb">app/concerns/cbs_client.rb</a></td>
-        <td class="red strong">29.31 %</td>
+        <td class="red strong">29.23 %</td>
         <td>173</td>
-        <td>58</td>
-        <td>17</td>
-        <td>41</td>
+        <td>65</td>
+        <td>19</td>
+        <td>46</td>
         <td>0.3</td>
       </tr>
       
@@ -377,11 +377,11 @@
         <div class="source_table" id="1c3ccc3fafe5a93ef194b8bfa48dd52541b9bf0b">
   <div class="header">
     <h3>app/concerns/cbs_client.rb</h3>
-    <h4><span class="red">29.31 %</span> covered</h4>
+    <h4><span class="red">29.23 %</span> covered</h4>
     <div>
-      <b>58</b> relevant lines. 
-      <span class="green"><b>17</b> lines covered</span> and
-      <span class="red"><b>41</b> lines missed.</span>
+      <b>65</b> relevant lines. 
+      <span class="green"><b>19</b> lines covered</span> and
+      <span class="red"><b>46</b> lines missed.</span>
     </div>
   </div>
   
@@ -853,19 +853,19 @@
         <li class="covered" data-hits="1" data-linenumber="78">
           <span class="hits">1</span>
           
-          <code class="ruby">    def get_params#(access_token,cbs_id)</code>
+          <code class="ruby">    def get_params(access_token,cbs_id)</code>
         </li>
       
         <li class="missed" data-hits="0" data-linenumber="79">
           
           
-          <code class="ruby">      @@access_token = &quot;U2FsdGVkX18eAlAHs48KMkJOwSZuFyQY0cAKinkafQ9nG8p4AFzuCG14lXlV4pV-DAacLmwy7sToFRV5Sf7_DT8wyaedVv6TL_03czOPUFd4fNt9sJ-nWmTQsaOj88Br&quot;</code>
+          <code class="ruby">      @@access_token = access_token</code>
         </li>
       
         <li class="missed" data-hits="0" data-linenumber="80">
           
           
-          <code class="ruby">      @@cbs_id = &quot;b2c7c77e1b22e0f4&quot;</code>
+          <code class="ruby">      @@cbs_id = cbs_id</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="81">
@@ -874,16 +874,16 @@
           <code class="ruby"></code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="82">
+        <li class="missed" data-hits="0" data-linenumber="82">
           
           
-          <code class="ruby">      # build_mega_hash</code>
+          <code class="ruby">      build_mega_hash</code>
         </li>
       
-        <li class="missed" data-hits="0" data-linenumber="83">
+        <li class="never" data-hits="" data-linenumber="83">
           
           
-          <code class="ruby">      build_hash_fantasy_teams</code>
+          <code class="ruby"></code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="84">
@@ -928,250 +928,250 @@
           <code class="ruby"></code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="91">
+        <li class="covered" data-hits="1" data-linenumber="91">
+          <span class="hits">1</span>
           
-          
-          <code class="ruby">    # def build_mega_hash</code>
+          <code class="ruby">    def build_mega_hash</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="92">
           
           
-          <code class="ruby">    #   {:user =&gt; @@cbs_id,</code>
+          <code class="ruby">      {:user =&gt; @@cbs_id,</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="93">
           
           
-          <code class="ruby">    #     :drafts_attributes =&gt;</code>
+          <code class="ruby">        :drafts_attributes =&gt;</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="94">
           
           
-          <code class="ruby">    #       [</code>
+          <code class="ruby">          [</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="95">
           
           
-          <code class="ruby">    #         {</code>
+          <code class="ruby">            {</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="96">
           
           
-          <code class="ruby">    #           :league_attributes =&gt; </code>
+          <code class="ruby">              :league_attributes =&gt;</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="97">
           
           
-          <code class="ruby">    #             build_hash_league_details.merge(build_hash_draft_config).merge(build_hash_fantasy_teams) </code>
+          <code class="ruby">                  build_hash_league_details.merge(build_hash_draft_config).merge(</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="98">
           
           
-          <code class="ruby"></code>
+          <code class="ruby">                  :teams_attributes =&gt; build_hash_fantasy_teams),</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="99">
           
           
-          <code class="ruby">    #           :rounds_attributes =&gt;</code>
+          <code class="ruby">              :rounds_attributes =&gt;</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="100">
           
           
-          <code class="ruby">    #           [</code>
+          <code class="ruby">                build_hash_draft_order</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="101">
           
           
-          <code class="ruby">    #             {</code>
+          <code class="ruby">            }</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="102">
           
           
-          <code class="ruby">    #               :picks_attributes =&gt;</code>
+          <code class="ruby">          ]</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="103">
+        <li class="missed" data-hits="0" data-linenumber="103">
           
           
-          <code class="ruby">    #               [</code>
+          <code class="ruby">      }</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="104">
           
           
-          <code class="ruby">    #                 {</code>
+          <code class="ruby"></code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="105">
           
           
-          <code class="ruby"></code>
+          <code class="ruby">    end</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="106">
           
           
-          <code class="ruby">    #                 }</code>
+          <code class="ruby"></code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="107">
+        <li class="covered" data-hits="1" data-linenumber="107">
+          <span class="hits">1</span>
           
-          
-          <code class="ruby">    #               ]</code>
+          <code class="ruby">    def build_rounds_array</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="108">
           
           
-          <code class="ruby">    #             }</code>
+          <code class="ruby"></code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="109">
           
           
-          <code class="ruby">    #           ]</code>
+          <code class="ruby">    end</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="110">
           
           
-          <code class="ruby">    #         }</code>
-        </li>
-      
-        <li class="never" data-hits="" data-linenumber="111">
-          
-          
-          <code class="ruby">    #       ]</code>
-        </li>
-      
-        <li class="never" data-hits="" data-linenumber="112">
-          
-          
-          <code class="ruby">    #   }</code>
-        </li>
-      
-        <li class="never" data-hits="" data-linenumber="113">
-          
-          
           <code class="ruby"></code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="114">
-          
-          
-          <code class="ruby">    # end</code>
-        </li>
-      
-        <li class="never" data-hits="" data-linenumber="115">
-          
-          
-          <code class="ruby"></code>
-        </li>
-      
-        <li class="covered" data-hits="1" data-linenumber="116">
+        <li class="covered" data-hits="1" data-linenumber="111">
           <span class="hits">1</span>
           
           <code class="ruby">    def build_hash_league_details</code>
         </li>
       
-        <li class="missed" data-hits="0" data-linenumber="117">
+        <li class="missed" data-hits="0" data-linenumber="112">
           
           
           <code class="ruby">      response = json_response('league/details')[:body][:league_details]</code>
         </li>
       
-        <li class="missed" data-hits="0" data-linenumber="118">
+        <li class="missed" data-hits="0" data-linenumber="113">
           
           
-          <code class="ruby">      response[:commish_type] = response[:type] </code>
+          <code class="ruby">      response[:commish_type] = response[:type]</code>
         </li>
       
-        <li class="missed" data-hits="0" data-linenumber="119">
+        <li class="missed" data-hits="0" data-linenumber="114">
           
           
           <code class="ruby">      response.delete :type</code>
         </li>
       
-        <li class="missed" data-hits="0" data-linenumber="120">
+        <li class="missed" data-hits="0" data-linenumber="115">
           
           
           <code class="ruby">      @@league_details = response</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="121">
+        <li class="never" data-hits="" data-linenumber="116">
           
           
           <code class="ruby">    end</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="122">
+        <li class="never" data-hits="" data-linenumber="117">
           
           
           <code class="ruby"></code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="123">
+        <li class="covered" data-hits="1" data-linenumber="118">
           <span class="hits">1</span>
           
           <code class="ruby">    def build_hash_draft_config</code>
         </li>
       
-        <li class="missed" data-hits="0" data-linenumber="124">
+        <li class="missed" data-hits="0" data-linenumber="119">
           
           
           <code class="ruby">      response = json_response('league/draft/config')[:body][:draft]</code>
         </li>
       
-        <li class="missed" data-hits="0" data-linenumber="125">
+        <li class="missed" data-hits="0" data-linenumber="120">
           
           
-          <code class="ruby">      response[:draft_event_type] = response[:type] </code>
+          <code class="ruby">      response[:draft_event_type] = response[:type]</code>
         </li>
       
-        <li class="missed" data-hits="0" data-linenumber="126">
+        <li class="missed" data-hits="0" data-linenumber="121">
           
           
           <code class="ruby">      response.delete :type</code>
         </li>
       
-        <li class="missed" data-hits="0" data-linenumber="127">
+        <li class="missed" data-hits="0" data-linenumber="122">
           
           
           <code class="ruby">      @@draft_config = response</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="128">
+        <li class="never" data-hits="" data-linenumber="123">
           
           
           <code class="ruby">    end</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="129">
+        <li class="never" data-hits="" data-linenumber="124">
           
           
           <code class="ruby"></code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="130">
+        <li class="covered" data-hits="1" data-linenumber="125">
           <span class="hits">1</span>
           
           <code class="ruby">    def build_hash_draft_order</code>
         </li>
       
+        <li class="missed" data-hits="0" data-linenumber="126">
+          
+          
+          <code class="ruby">      response = json_response('league/draft/order')[:body][:draft_order][:picks]</code>
+        </li>
+      
+        <li class="missed" data-hits="0" data-linenumber="127">
+          
+          
+          <code class="ruby">      rounds = []</code>
+        </li>
+      
+        <li class="missed" data-hits="0" data-linenumber="128">
+          
+          
+          <code class="ruby">      @@draft_config[:rounds].to_i.times do |i|</code>
+        </li>
+      
+        <li class="missed" data-hits="0" data-linenumber="129">
+          
+          
+          <code class="ruby">        rounds &lt;&lt; { :number =&gt; i+1, :picks_attributes =&gt;  response.select { |pick| pick[:round] == i+1 } }</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="130">
+          
+          
+          <code class="ruby">      end</code>
+        </li>
+      
         <li class="missed" data-hits="0" data-linenumber="131">
           
           
-          <code class="ruby">      json_response('league/draft/order')</code>
+          <code class="ruby">      rounds</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="132">
@@ -1225,7 +1225,7 @@
         <li class="missed" data-hits="0" data-linenumber="140">
           
           
-          <code class="ruby">      { :teams_attributes =&gt; response }</code>
+          <code class="ruby">      response</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="141">
@@ -1297,7 +1297,7 @@
         <li class="missed" data-hits="0" data-linenumber="152">
           
           
-          <code class="ruby">          slots_array &lt;&lt; { :eligible_position =&gt; hash[:abbr] } </code>
+          <code class="ruby">          slots_array &lt;&lt; { :eligible_position =&gt; hash[:abbr] }</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="153">
@@ -1315,13 +1315,13 @@
         <li class="missed" data-hits="0" data-linenumber="155">
           
           
-          <code class="ruby">      response[:roster][:statuses][1][:max].to_i.times do </code>
+          <code class="ruby">      response[:roster][:statuses][1][:max].to_i.times do</code>
         </li>
       
         <li class="missed" data-hits="0" data-linenumber="156">
           
           
-          <code class="ruby">        slots_array &lt;&lt; { :eligible_position =&gt; &quot;RS&quot; } </code>
+          <code class="ruby">        slots_array &lt;&lt; { :eligible_position =&gt; &quot;RS&quot; }</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="157">

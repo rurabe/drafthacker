@@ -75,12 +75,12 @@ require 'open-uri'
   end
 
     # Some Shit
-    def get_params#(access_token,cbs_id)
-      @@access_token = "U2FsdGVkX18eAlAHs48KMkJOwSZuFyQY0cAKinkafQ9nG8p4AFzuCG14lXlV4pV-DAacLmwy7sToFRV5Sf7_DT8wyaedVv6TL_03czOPUFd4fNt9sJ-nWmTQsaOj88Br"
-      @@cbs_id = "b2c7c77e1b22e0f4"
+    def get_params(access_token,cbs_id)
+      @@access_token = access_token
+      @@cbs_id = cbs_id
 
-      # build_mega_hash
-      build_hash_fantasy_teams
+      build_mega_hash
+
 
 
 
@@ -88,47 +88,47 @@ require 'open-uri'
 
     private
 
-    # def build_mega_hash
-    #   {:user => @@cbs_id,
-    #     :drafts_attributes =>
-    #       [
-    #         {
-    #           :league_attributes => 
-    #             build_hash_league_details.merge(build_hash_draft_config).merge(build_hash_fantasy_teams) 
+    def build_mega_hash
+      {:user => @@cbs_id,
+        :drafts_attributes =>
+          [
+            {
+              :league_attributes =>
+                  build_hash_league_details.merge(build_hash_draft_config).merge(
+                  :teams_attributes => build_hash_fantasy_teams),
+              :rounds_attributes =>
+                build_hash_draft_order
+            }
+          ]
+      }
 
-    #           :rounds_attributes =>
-    #           [
-    #             {
-    #               :picks_attributes =>
-    #               [
-    #                 {
+    end
 
-    #                 }
-    #               ]
-    #             }
-    #           ]
-    #         }
-    #       ]
-    #   }
+    def build_rounds_array
 
-    # end
+    end
 
     def build_hash_league_details
       response = json_response('league/details')[:body][:league_details]
-      response[:commish_type] = response[:type] 
+      response[:commish_type] = response[:type]
       response.delete :type
       @@league_details = response
     end
 
     def build_hash_draft_config
       response = json_response('league/draft/config')[:body][:draft]
-      response[:draft_event_type] = response[:type] 
+      response[:draft_event_type] = response[:type]
       response.delete :type
       @@draft_config = response
     end
 
     def build_hash_draft_order
-      json_response('league/draft/order')
+      response = json_response('league/draft/order')[:body][:draft_order][:picks]
+      rounds = []
+      @@draft_config[:rounds].to_i.times do |i|
+        rounds << { :number => i+1, :picks_attributes =>  response.select { |pick| pick[:round] == i+1 } }
+      end
+      rounds
     end
 
     def build_hash_fantasy_teams
@@ -137,7 +137,7 @@ require 'open-uri'
       response.map! do |team|
         team.merge build_slots_array
       end
-      { :teams_attributes => response }
+      response
     end
 
     def build_hash_league_rules
@@ -149,11 +149,11 @@ require 'open-uri'
       slots_array = []
       response[:roster][:positions].each do |hash|
         hash[:max_active].to_i.times do
-          slots_array << { :eligible_position => hash[:abbr] } 
+          slots_array << { :eligible_position => hash[:abbr] }
         end
       end
-      response[:roster][:statuses][1][:max].to_i.times do 
-        slots_array << { :eligible_position => "RS" } 
+      response[:roster][:statuses][1][:max].to_i.times do
+        slots_array << { :eligible_position => "RS" }
       end
       { :slots_attributes => slots_array }
     end
