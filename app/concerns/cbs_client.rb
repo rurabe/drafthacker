@@ -149,11 +149,11 @@ module CbsClient
   end
 
   def read_response(api_call)
-    open(build_url(api_call)).read
+    Net::HTTP.get_response(build_url(api_call)).body
   end
 
   def build_url(api_call)
-    "http://api.cbssports.com/fantasy/#{api_call}?access_token=#{@@access_token}&response_format=JSON"
+    URI("http://api.cbssports.com/fantasy/#{api_call}?access_token=#{@@access_token}&response_format=JSON")
   end
 end
 # def rounds_and_picks
