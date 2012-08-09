@@ -80,7 +80,8 @@ require 'open-uri'
       @@cbs_id = "b2c7c77e1b22e0f4"
 
       # build_mega_hash
-      build_hash_draft_config.merge build_hash_league_details
+      build_hash_fantasy_teams
+
 
 
     end
@@ -92,10 +93,9 @@ require 'open-uri'
     #     :drafts_attributes =>
     #       [
     #         {
-    #           :league_attributes =>
-    #           {
-    #             build_hash_league_details.merge build_hash_draft_config
-    #           },
+    #           :league_attributes => 
+    #             build_hash_league_details.merge(build_hash_draft_config).merge(build_hash_fantasy_teams) 
+
     #           :rounds_attributes =>
     #           [
     #             {
@@ -114,13 +114,17 @@ require 'open-uri'
     # end
 
     def build_hash_league_details
-      json_response('league/details')[:body][:league_details]
+      response = json_response('league/details')[:body][:league_details]
+      response[:commish_type] = response[:type] 
+      response.delete :type
+      @@league_details = response
     end
 
     def build_hash_draft_config
       response = json_response('league/draft/config')[:body][:draft]
-      response[:type] = response[:draft_event_type]
-      response[:type].delete
+      response[:draft_event_type] = response[:type] 
+      response.delete :type
+      @@draft_config = response
     end
 
     def build_hash_draft_order
@@ -128,7 +132,30 @@ require 'open-uri'
     end
 
     def build_hash_fantasy_teams
-      json_response('league/teams')
+      response = json_response('league/teams')[:body][:teams]
+      new_hash = {}
+      response.map! do |team|
+        team.merge build_slots_array
+      end
+      { :teams_attributes => response }
+    end
+
+    def build_hash_league_rules
+      json_response('league/rules')[:body][:rules]
+    end
+
+    def build_slots_array
+      response = build_hash_league_rules
+      slots_array = []
+      response[:roster][:positions].each do |hash|
+        hash[:max_active].to_i.times do
+          slots_array << { :eligible_position => hash[:abbr] } 
+        end
+      end
+      response[:roster][:statuses][1][:max].to_i.times do 
+        slots_array << { :eligible_position => "RS" } 
+      end
+      { :slots_attributes => slots_array }
     end
 
     def json_response(api_call)
