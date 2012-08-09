@@ -28,11 +28,18 @@ class League < ActiveRecord::Base
 
   validates_presence_of :draft_id, :rounds, :num_teams
 
+  after_create :create_teams
+
 
 private
 
   def create_teams
-    # self.num_teams.times do
+    self.num_teams.times do
+      team = self.teams.build(:name => "#{Faker::Lorem.words(3).join(" ")}")
+      unless team.save
+        raise "after_create failed to build a new team in the League class"
+      end
+    end
   end
 
 end
