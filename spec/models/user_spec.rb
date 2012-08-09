@@ -5,7 +5,7 @@ describe User do
   it { should have_one :team }
 
   describe "upon creation" do
-    it "a new draft is created" do
+    it "creates a new draft" do
       @user = User.new
       @user.drafts.count.should == 0
       @user.save

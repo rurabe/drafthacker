@@ -10,7 +10,7 @@ class Draft < ActiveRecord::Base
   private
 
     def create_league
-      league = self.build_league
+      league = self.build_league(:num_teams=>10, :rounds=>"14")
       unless league.save
         raise "after_create failed to build a new league from the Draft class"
       end
