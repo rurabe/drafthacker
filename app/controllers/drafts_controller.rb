@@ -7,6 +7,7 @@ class DraftsController < ApplicationController
     @draft = @user.drafts.first
     @league = @draft.league
     @team = @league.teams.first
+    @slot = @team.slots.first
   end
 
   def index
