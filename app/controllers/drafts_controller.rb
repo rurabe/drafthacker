@@ -6,6 +6,7 @@ class DraftsController < ApplicationController
     @user.save
     @draft = @user.drafts.first
     @league = @draft.league
+    @team = @league.teams.first
   end
 
   def index
