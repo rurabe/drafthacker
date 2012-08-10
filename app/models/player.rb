@@ -7,16 +7,22 @@ class Player < ActiveRecord::Base
   attr_accessible :cbs_id,
                   :first_name,
                   :full_name,
-                  :icons, 
+                  :icons,
                   :last_name,
                   :on_waivers,
-                  :primary_position,
+                  :position,
                   :pro_status,
                   :pro_team,
                   :bye_week,
                   :is_locked,
-                  :opponent
-
-
+                  :opponent,
+                  :high,
+                  :low,
+                  :profile_link,
+                  :pct,
+                  :change,
+                  :avg,
+                  :profile_url,
+                  :rank
 
 end
