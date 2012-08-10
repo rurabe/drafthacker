@@ -5,6 +5,7 @@ class DraftsController < ApplicationController
     @user = User.new(@mega_hash)
     @user.save
     @draft = @user.drafts.first
+    @league = @draft.league
   end
 
   def index
