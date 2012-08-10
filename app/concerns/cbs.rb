@@ -122,7 +122,10 @@ module Cbs
         pick.delete :team
       end
       @@draft_config[:rounds].to_i.times do |i|
-        rounds << { :number => i+1, :picks_attributes =>  response.select { |pick| pick[:round] == i+1 } }
+        #select all picks for the given round
+        picks = response.select { |pick| pick[:round] == i+1 }
+        picks.each { |pick| pick.delete :round }
+        rounds << { :number => i+1, :picks_attributes =>  picks }
       end
       rounds
     end
