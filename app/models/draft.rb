@@ -3,8 +3,12 @@ class Draft < ActiveRecord::Base
   has_one :league
   has_many :rounds
 
+
+  attr_accessible :name, 
+  								:start_time, 
+  								:league_attributes, 
+  								:rounds_attributes
   accepts_nested_attributes_for :league, :rounds
-  attr_accessible :name, :start_time, :league_attributes, :rounds_attributes
 
 
 

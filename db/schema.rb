@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120808223012) do
+ActiveRecord::Schema.define(:version => 20120810053447) do
 
   create_table "drafts", :force => true do |t|
     t.integer  "user_id"
@@ -59,6 +59,8 @@ ActiveRecord::Schema.define(:version => 20120808223012) do
     t.integer  "round_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "number"
+    t.string   "team_info"
   end
 
   add_index "picks", ["player_id"], :name => "index_picks_on_player_id"
@@ -72,8 +74,6 @@ ActiveRecord::Schema.define(:version => 20120808223012) do
     t.integer  "cbs_id"
     t.string   "first_name"
     t.string   "full_name"
-    t.string   "icons_headline"
-    t.string   "icons_injury"
     t.string   "last_name"
     t.string   "on_waivers"
     t.string   "primary_position"
@@ -83,6 +83,7 @@ ActiveRecord::Schema.define(:version => 20120808223012) do
     t.string   "is_locked"
     t.string   "opponent"
     t.integer  "slot_id"
+    t.string   "icons"
   end
 
   add_index "players", ["slot_id"], :name => "index_players_on_slot_id"
@@ -91,6 +92,7 @@ ActiveRecord::Schema.define(:version => 20120808223012) do
     t.integer  "draft_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "number"
   end
 
   add_index "rounds", ["draft_id"], :name => "index_rounds_on_draft_id"
@@ -109,11 +111,20 @@ ActiveRecord::Schema.define(:version => 20120808223012) do
   create_table "teams", :force => true do |t|
     t.string   "name"
     t.integer  "user_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
     t.integer  "league_id"
+    t.string   "long_abbr"
+    t.boolean  "logged_in_team"
+    t.string   "short_name"
+    t.string   "logo"
+    t.string   "abbr"
+    t.string   "owners"
+    t.integer  "league_team_id"
   end
 
+  add_index "teams", ["league_id"], :name => "index_teams_on_league_id"
+  add_index "teams", ["league_team_id"], :name => "index_teams_on_league_team_id"
   add_index "teams", ["user_id"], :name => "index_teams_on_user_id"
 
   create_table "users", :force => true do |t|
