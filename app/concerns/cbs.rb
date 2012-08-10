@@ -117,6 +117,10 @@ module Cbs
     def self.build_hash_draft_order
       response = json_response('league/draft/order')[:body][:draft_order][:picks]
       rounds = []
+      response.each do |pick|
+        pick[:team_info] = pick[:team]
+        pick.delete :team
+      end
       @@draft_config[:rounds].to_i.times do |i|
         rounds << { :number => i+1, :picks_attributes =>  response.select { |pick| pick[:round] == i+1 } }
       end
