@@ -149,7 +149,7 @@ module Cbs
       slots_array = []
       response[:roster][:positions].each do |hash|
         hash[:max_active].to_i.times do
-          slots_array << { :eligible_position => hash[:abbr] }
+          slots_array << { :eligible_positions => hash[:abbr] }
         end
       end
       response[:roster][:statuses][1][:max].to_i.times do
