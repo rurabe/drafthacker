@@ -8,11 +8,13 @@
 
 <p>Your team name is <%= @team.name %>, which is pretty unimaginative </p>
 
-<%= @user.inspect %>
-<%= @draft.inspect %>
-<%= @league.inspect %>
-<%= @team.inspect %>
-<%= @slot.inspect %>
+<p>You have picks <%= @team.picks.select(&:number) %>
+
+<p><%= @user.inspect %></p>
+<p><%= @draft.inspect %></p>
+<p><%= @league.inspect %></p>
+<p><%= @team.inspect %></p>
+<p><%= @slot.inspect %></p>
 
 <%= @mega_hash %>
 

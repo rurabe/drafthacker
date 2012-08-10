@@ -15,4 +15,6 @@
   								:league_team_id, #CBS reports this as 'id'
   				 				:slots_attributes
   accepts_nested_attributes_for :slots
+
+  after_create :set_user_id
 end
