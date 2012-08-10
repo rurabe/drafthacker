@@ -146,7 +146,7 @@ module Cbs
         end
       end
       response[:roster][:statuses][1][:max].to_i.times do
-        slots_array << { :eligible_position => "RS" }
+        slots_array << { :eligible_positions => "RS" }
       end
       { :slots_attributes => slots_array }
     end
