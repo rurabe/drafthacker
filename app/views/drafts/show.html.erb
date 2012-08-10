@@ -6,7 +6,9 @@
 
 <p>Your league name is <%= @league.name %> </p>
 
-<p>Your team name is <%= @team.inspect %>, which is pretty unimaginative </p>
+<p>Your team name is <%= @team.name %>, which is pretty unimaginative </p>
+
+<@= @user.team %>
 
 <%= @mega_hash %>
 
