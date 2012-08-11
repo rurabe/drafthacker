@@ -1,6 +1,7 @@
 class DraftsController < ApplicationController
 
   def show
+
     if params['access_token']
       @mega_hash = Cbs::League.params(params['access_token'], params['user_id'])
     else
