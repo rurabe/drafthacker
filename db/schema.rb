@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120810060515) do
+ActiveRecord::Schema.define(:version => 20120811032503) do
 
   create_table "drafts", :force => true do |t|
     t.integer  "user_id"
@@ -59,10 +59,10 @@ ActiveRecord::Schema.define(:version => 20120810060515) do
     t.integer  "player_id"
     t.integer  "team_id"
     t.integer  "round_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
     t.integer  "number"
-    t.string   "team_info"
+    t.integer  "league_team_id"
   end
 
   add_index "picks", ["player_id"], :name => "index_picks_on_player_id"
@@ -70,15 +70,15 @@ ActiveRecord::Schema.define(:version => 20120810060515) do
   add_index "picks", ["team_id"], :name => "index_picks_on_team_id"
 
   create_table "players", :force => true do |t|
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.string   "type"
     t.integer  "cbs_id"
     t.string   "first_name"
     t.string   "full_name"
     t.string   "last_name"
     t.string   "on_waivers"
-    t.string   "primary_position"
+    t.string   "position"
     t.string   "pro_status"
     t.string   "pro_team"
     t.string   "bye_week"
@@ -86,6 +86,14 @@ ActiveRecord::Schema.define(:version => 20120810060515) do
     t.string   "opponent"
     t.integer  "slot_id"
     t.string   "icons"
+    t.integer  "high"
+    t.integer  "low"
+    t.string   "profile_link"
+    t.integer  "pct"
+    t.integer  "change"
+    t.integer  "avg"
+    t.string   "profile_url"
+    t.integer  "rank"
   end
 
   add_index "players", ["slot_id"], :name => "index_players_on_slot_id"
