@@ -16,7 +16,7 @@ module Cbs
       def build_url(options = {})
         api_call = options.fetch(:api_call)       # eg. 'league/details', !!-REQUIRED-!!
         params = build_params(options[:params]) if options[:params]   # eg. { :SPORT => "football" }, optional
-        
+
         URI("http://api.cbssports.com/fantasy/#{api_call}?#{params}response_format=JSON")
       end
 
@@ -53,10 +53,6 @@ module Cbs
 
   class League
     extend ApiCall
-
-    # def self.params(options= {}) 
-    #   build_mega_hash(options)
-    # end
 
     def self.build_mega_hash(options = {}) # eg. { :access_token => "csugvwu3298hfw9", :cbs_id => "r29hefb298f2b" }
       cbs_id = options.fetch(:cbs_id)
@@ -136,12 +132,13 @@ module Cbs
       def self.build_hash_draft_order(access_token)
         all_picks = json_response({ :api_call => 'league/draft/order', :params => { :access_token => access_token } })[:body][:draft_order][:picks]
         rounds = []
-        
+
         all_picks.each do |pick|
-          # Team is already an association for a pick
-          pick[:team_info] = pick.delete :team
+          # Team is already an association for a pick, plus all we need is the league_team_id
+          pick[:league_team_id] = pick[:team][:id]
+          pick.delete :team
         end
-        
+
         # Select the number of rounds...
         num_of_rounds = all_picks[-1][:round].to_i
 
@@ -149,10 +146,10 @@ module Cbs
         num_of_rounds.times do |i|
           # Select all picks for that given round
           round_picks = all_picks.select { |pick| pick[:round] == i+1 }
-          
+
           # Delete attribute round from the pick hash. Prevents namespace conflict with pick's association to a round. round_id is accessible through the association.
           round_picks.each { |pick| pick.delete :round }
-          
+
           # Assign a round number, and attach associated picks before pushing to rounds array.
           rounds << { :number => i+1, :picks_attributes =>  round_picks }
           end
