@@ -1,180 +1,166 @@
 require 'net/http'
 module Cbs
 
+  module ApiCall
 
-
-  class Players
-    def self.populate
-        parsed_data = parse('http://api.cbssports.com/fantasy/players/list?SPORT=football&response_format=JSON')
-        all_players = parsed_data[:body][:players]
-
-        @key_conversion_hash = {
-                            :id         =>   :cbs_id,
-                            :firstname  =>   :first_name,
-                            :fullname   =>   :full_name,
-                            :icons      =>   :icons,
-                            :lastname   =>   :last_name,
-                            :on_waivers =>   :on_waivers,
-                            :position   =>   :primary_position,
-                            :pro_status =>   :pro_status,
-                            :pro_team   =>   :pro_team,
-                            :bye_week   =>   :bye_week,
-                            :is_locked  =>   :is_locked,
-                            :opponent   =>   :opponent
-                            }
-
-
-        all_players.each do |player|
-          attributes = convert_keys(player, @key_conversion_hash)
-          create_player_by_position_type(player[:position], attributes)
-        end
-      end
+    def json_response(options = {}) #eg { :api_call => 'league/details', :params => { :access_token => "csugvwu3298hfw9" } }
+      JSON.parse(read_response(options), :symbolize_names => true)
+    end
 
     private
 
-    def self.convert_keys(hash, key_conversion_hash)
-      new_hash = {}
-      hash.each do |k, v|
-        new_hash[key_conversion_hash[k]] = hash[k]
+      def read_response(options = {})
+        Net::HTTP.get_response(build_url(options)).body
       end
-      new_hash
-    end
 
+      def build_url(options = {})
+        api_call = options.fetch(:api_call)       # eg. 'league/details', !!-REQUIRED-!!
+        params = build_params(options[:params]) if options[:params]   # eg. { :SPORT => "football" }, optional
+        
+        URI("http://api.cbssports.com/fantasy/#{api_call}?#{params}response_format=JSON")
+      end
 
-    def self.create_player_by_position_type(position, attributes)
-
-      position_to_object_hash = {
-                                  "D"         => lambda { Defense.create(attributes) },
-                                  "DB"        => lambda { DefensiveBack.create(attributes) },
-                                  "DL"        => lambda { DefensiveLineman.create(attributes) },
-                                  "DST"       => lambda { DefenseSpecialTeams.create(attributes) },
-                                  "K"         => lambda { Kicker.create(attributes) },
-                                  "LB"        => lambda { Linebacker.create(attributes) },
-                                  "QB"        => lambda { Quarterback.create(attributes) },
-                                  "RB"        => lambda { RunningBack.create(attributes) },
-                                  "ST"        => lambda { SpecialTeams.create(attributes) },
-                                  "TE"        => lambda { TightEnd.create(attributes) },
-                                  "TQB"       => lambda { TeamQuarterback.create(attributes) },
-                                  "WR"        => lambda { WideReceiver.create(attributes) },
-                                  "FLEX"      => lambda { Player.create(attributes) },
-                                  "ID"        => lambda { Player.create(attributes) },
-                                  "WR-TE"     => lambda { Player.create(attributes) },
-                                  "RB-WR"     => lambda { Player.create(attributes) },
-                                  "RB-WR-TE"  => lambda { Player.create(attributes) },
-                                  "DL-LB-DB"  => lambda { Player.create(attributes) }
-                                }
-
-      position_to_object_hash[position].call
-
-    end
-
-    def self.parse(path)
-      data = Net::HTTP.get_response(URI(path)).body
-      JSON.parse(data, :symbolize_names => true)
-    end
+      def build_params(params = {}) # eg. { :SPORT => "football" }
+        param_string = []
+        params.each do |k,v|
+          param_string << "#{k.to_s}=#{v}&"
+        end
+        param_string.join("")
+      end
   end
 
-  class League
-    #User.new(CBS::League.create_or_update())
-    #User.update_attributes(CBS::League.create_or_update())
 
-    def self.params(access_token,cbs_id)
-      @@access_token = access_token
-      @@cbs_id = cbs_id
 
-      build_mega_hash
+  class Players
+    extend ApiCall
+    def self.populate
+        players = json_response( { :api_call => 'players/average-draft-position', :params => { :SPORT => "football" } } )[:body][:average_draft_position][:players]
+
+        players.each do |player|
+          #Certain keys from the CBS JSON response need to be reassigned for reserved words, conflicts, etc.
+          player[:cbs_id] = player.delete :id
+          player[:first_name] = player.delete :firstname
+          player[:last_name] = player.delete :lastname
+          player[:full_name] = player.delete :fullname
+          Player.create(player)
+        end
     end
 
-    def self.build_mega_hash
-      {:cbs_id => @@cbs_id,
+    # TODO update function
+  end
+
+
+
+  class League
+    extend ApiCall
+
+    # def self.params(options= {}) 
+    #   build_mega_hash(options)
+    # end
+
+    def self.build_mega_hash(options = {}) # eg. { :access_token => "csugvwu3298hfw9", :cbs_id => "r29hefb298f2b" }
+      cbs_id = options.fetch(:cbs_id)
+      access_token = options.fetch(:access_token)
+
+      { :cbs_id => options.fetch(:cbs_id),
         :drafts_attributes =>
           [
             {
               :league_attributes =>
-                  build_hash_league_details.merge(build_hash_draft_config).merge(
-                  :teams_attributes => build_hash_fantasy_teams),
+                  build_hash_league_details(access_token).merge(build_hash_draft_config(access_token)).merge(
+                  :teams_attributes => build_hash_fantasy_teams(access_token)),
               :rounds_attributes =>
-                build_hash_draft_order
+                build_hash_draft_order(access_token)
             }
           ]
       }
     end
 
-    def self.build_hash_league_details
-      response = json_response('league/details')[:body][:league_details]
-      response[:commish_type] = response[:type]
-      response.delete :type
-      @@league_details = response
-    end
+    private
 
-    def self.build_hash_draft_config
-      response = json_response('league/draft/config')[:body][:draft]
-      response[:draft_event_type] = response[:type]
-      response.delete :type
-      @@draft_config = response
-    end
 
-    def self.build_hash_draft_order
-      response = json_response('league/draft/order')[:body][:draft_order][:picks]
-      rounds = []
-      response.each do |pick|
-        pick[:team_info] = pick[:team]
-        pick.delete :team
+      # API call to http://api.cbssports.com/fantasy/league/details ------------------------------
+      def self.build_hash_league_details(access_token)
+        details = json_response({ :api_call => 'league/details', :params => { :access_token => access_token } })[:body][:league_details]
+        # Type is a reserved word in ActiveRecord
+        details[:commish_type] = details.delete :type
+        details
       end
-      @@draft_config[:rounds].to_i.times do |i|
-        #select all picks for the given round
-        picks = response.select { |pick| pick[:round] == i+1 }
-        picks.each { |pick| pick.delete :round }
-        rounds << { :number => i+1, :picks_attributes =>  picks }
+
+      # API call to http://api.cbssports.com/fantasy/league/draft/config ------------------------------
+      def self.build_hash_draft_config(access_token)
+        configurations = json_response({ :api_call => 'league/draft/config', :params => { :access_token => access_token } })[:body][:draft]
+        # Type is a reserved word in ActiveRecord
+        configurations[:draft_event_type] = configurations.delete :type
+        configurations
       end
-      rounds
-    end
 
-    def self.build_hash_fantasy_teams
-      response = json_response('league/teams')[:body][:teams]
-      new_hash = {}
-      response.map! do |team|
-        team[:league_team_id] = team.delete :id
-        team.merge build_slots_array
-      end
-      response
-    end
+      # API call to http://api.cbssports.com/fantasy/league/teams ------------------------------
+      def self.build_hash_fantasy_teams(access_token)
+        teams = json_response({ :api_call => 'league/teams', :params => { :access_token => access_token } })[:body][:teams]
+        # Create the slot array that gets assigned to each team
+        team_slots_array = build_slots_array(access_token)
 
-    def self.build_hash_league_rules
-      json_response('league/rules')[:body][:rules]
-    end
-
-    def self.build_slots_array
-      response = build_hash_league_rules
-      slots_array = []
-      response[:roster][:positions].each do |hash|
-        hash[:max_active].to_i.times do
-          slots_array << { :eligible_positions => hash[:abbr] }
+        teams.map! do |team|
+          # Id is already an attribute of team
+          team[:league_team_id] = team.delete :id
+          # Each team gets an slot array built for them
+          team.merge team_slots_array
         end
+
+        teams
       end
-      response[:roster][:statuses][1][:max].to_i.times do
-        slots_array << { :eligible_positions => "RS" }
+          # API call to http://api.cbssports.com/fantasy/league/rules ------------------------------
+          def self.build_slots_array(access_token)
+            rules = json_response({ :api_call => 'league/rules', :params => { :access_token => access_token } })[:body][:rules]
+            slots_array = []
+
+            # Select each *active* position hash eg {:abbr = > "QB", :max_total = > "No Limit", :max_active = > "1", :min_active = > "1"}
+            rules[:roster][:positions].each do |hash|
+              # Create the number of slots for that position
+              hash[:max_active].to_i.times do
+                slots_array << { :eligible_positions => hash[:abbr] }
+              end
+            end
+
+            # Select the statuses section of the hash to determine the number of bench spots (RS) and make that many
+            # eg : statuses = > [..., {:min = > "0", :max = > "6", :description = > "Reserve Players" }, ...]
+            rules[:roster][:statuses][1][:max].to_i.times do
+              slots_array << { :eligible_positions => "RS" }
+            end
+
+            { :slots_attributes => slots_array }
+          end
+
+      # API call to http://api.cbssports.com/fantasy/league/draft/order ------------------------------
+      def self.build_hash_draft_order(access_token)
+        all_picks = json_response({ :api_call => 'league/draft/order', :params => { :access_token => access_token } })[:body][:draft_order][:picks]
+        rounds = []
+        
+        all_picks.each do |pick|
+          # Team is already an association for a pick
+          pick[:team_info] = pick.delete :team
+        end
+        
+        # Select the number of rounds...
+        num_of_rounds = all_picks[-1][:round].to_i
+
+        # ...and make that many round hashes
+        num_of_rounds.times do |i|
+          # Select all picks for that given round
+          round_picks = all_picks.select { |pick| pick[:round] == i+1 }
+          
+          # Delete attribute round from the pick hash. Prevents namespace conflict with pick's association to a round. round_id is accessible through the association.
+          round_picks.each { |pick| pick.delete :round }
+          
+          # Assign a round number, and attach associated picks before pushing to rounds array.
+          rounds << { :number => i+1, :picks_attributes =>  round_picks }
+          end
+
+        rounds
       end
-      { :slots_attributes => slots_array }
-    end
 
-    def self.json_response(api_call)
-      JSON.parse(read_response(api_call), :symbolize_names => true)
-    end
 
-    def self.read_response(api_call)
-      Net::HTTP.get_response(build_url(api_call)).body
-    end
 
-    def self.build_url(api_call)
-      URI("http://api.cbssports.com/fantasy/#{api_call}?access_token=#{@@access_token}&response_format=JSON&SPORT=football")
-    end
   end
 end
-# def rounds_and_picks
-#   parsed_data = parse('http://api.cbssports.com/fantasy/league/draft/order?SPORT=football&response_format=JSON&access_token=U2FsdGVkX1-Sj855Oa9QwS41LUcDCCaFkEAYBU_-htOX1VAMnUzbo4ZFtx_Y_EflpOxk9ztMxFQD2bCvNGeJ5NK68I3-Az4ni1Dans02_yyVxIBI_-BUAKifINXHnrvz')
-#   picks_data = parsed_data[:body][:draft_order][:picks]
-# end
-#
-# positions_data = open('http://api.cbssports.com/fantasy/positions?SPORT=football&response_format=JSON').read
-# parsed_position_data = JSON.parse(positions_data, :symbolize_names => true)
