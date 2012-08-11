@@ -1,5 +1,49 @@
-<h1>Drafts#show</h1>
-<p>Find me in app/views/drafts/show.html.erb</p>
+
+
+<div class='hero-unit'>
+  <h1 align="center"><%= @user.team.name %></h1>
+  <h2 align="right"><%= @user.cbs_id %><h2>
+</div>
+
+<div class='row'>
+  <div class='span8'>
+    <div class='well'>
+        <ul>
+          <li>These are players!! Yay.</li>
+        </ul>
+    </div>
+  </div>
+  <div class='span4'>
+    <div class='well'>
+      <p>You have picks:</p> 
+      <ul>
+        <% @team.picks.order('number ASC').each do |p| %>
+          <li>Round <%= p.round.number %> - Pick <%= p.number %></li>
+        <% end %>
+      </ul>
+      <p>And you need to fill these roster spots:</p> 
+      <ul>
+        <% @team.slots.order(:created_at).each do |s| %>
+          <li><%= s.eligible_positions %></li>
+        <% end %>
+      </ul>
+      <p>Here are the clowns you will be dominating:</p>
+      <ul>
+        <% @draft.rounds.where(:number => 1).first.picks.order('number ASC').each do |p| %>
+          <li> <%= image_tag p.team.logo, :size => "30x30" %> - <%= p.team.name %> <%= "Yeah, you're a clown" if p.team == @team %></li>
+        <% end %>
+      </ul>
+
+    </div>
+  </div>
+</div>
+<div class='row'>
+  <div class='span12'>
+
+  </div>
+</div>
+
+
 <p>Your CBS ID is <%= @user.cbs_id %></p>
 
 <p>The system has assigned you a draft id of <%= @draft.id %> </p>
@@ -7,14 +51,21 @@
 <p>Your league name is <%= @league.name %> </p>
 
 <p>Your team name is <%= @team.name %>, which is pretty unimaginative </p>
-
-<p>You have picks <%= @team.picks.select(&:number) %>
-
+ 
+<p>You have picks:</p> 
+  <ul>
+    <% @team.picks.order('number ASC').each do |p| %>
+      <li>Round <%= p.round.number %> - Pick <%= p.number %></li>
+    <% end %>
+  </ul>
+<p>XXXXXXXXXXXXXXX</p>
 <p><%= @user.inspect %></p>
 <p><%= @draft.inspect %></p>
 <p><%= @league.inspect %></p>
 <p><%= @team.inspect %></p>
 <p><%= @slot.inspect %></p>
+<p><%= @round.inspect %></p>
+<p><%= @pick.inspect %></p>
 
 <%= @mega_hash %>
 
