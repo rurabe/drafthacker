@@ -7,13 +7,13 @@ class Pick < ActiveRecord::Base
                   :team_id          # eg 483
 
 
-  after_commit :link_team_id
+  after_create :link_team_id
 
 
 
   private
     def link_team_id
       team = Team.where(:league_id => self.round.draft.league, :league_team_id => self.league_team_id).first
-      self.update_attributes(:team_id => team)
+      self.update_attributes(:team_id => team.id)
     end
 end
