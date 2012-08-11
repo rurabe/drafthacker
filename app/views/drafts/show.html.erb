@@ -1,13 +1,24 @@
-<h1>Drafts#show</h1>
-<p>Find me in app/views/drafts/show.html.erb</p>
+<div class='hero-unit'>
+  <h1 align="center"><%= @user.team.name %></h1>
+</div>
+
 <div class='row'>
   <div class='span8'>
     <div class='well'>
+        <ul>
+          <li>These are players!! Yay.</li>
+        </ul>
     </div>
   </div>
   <div class='span4'>
     <div class='well'>
+
     </div>
+  </div>
+</div>
+<div class='row'>
+  <div class='span12'>
+
   </div>
 </div>
 <p>Your CBS ID is <%= @user.cbs_id %></p>
@@ -18,13 +29,15 @@
 
 <p>Your team name is <%= @team.name %>, which is pretty unimaginative </p>
 
-<p>You have picks <%= @team.picks.select(&:number) %>
-
+<p>You have picks <%= @team.picks.inspect %>
+<p>XXXXXXXXXXXXXXX</p>
 <p><%= @user.inspect %></p>
 <p><%= @draft.inspect %></p>
 <p><%= @league.inspect %></p>
 <p><%= @team.inspect %></p>
 <p><%= @slot.inspect %></p>
+<p><%= @round.inspect %></p>
+<p><%= @pick.inspect %></p>
 
 <%= @mega_hash %>
 
