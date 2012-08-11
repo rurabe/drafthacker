@@ -24,4 +24,5 @@
   def link_to_user
     self.league.draft.user.team = self if self.logged_in_team
   end
+
 end

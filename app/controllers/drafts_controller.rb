@@ -7,6 +7,7 @@ class DraftsController < ApplicationController
     else
       @mega_hash = Cbs::League.params('U2FsdGVkX1_dqYNjfcxVhErfEI9MqM7-7hNf7v6d64EzPGAjzKpHFAe8cA3jHI2G_KARduk8IlB7L6WNbPbzlXCz0vpOfb9VebWtJJj2A_mPprAYtwtKY1BeMDB_XcdW', 'b2c7c77e1b22e0f4')
     end
+
     @user = User.new(@mega_hash)
     @user.save
     @draft = @user.drafts.first
