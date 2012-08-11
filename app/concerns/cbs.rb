@@ -15,18 +15,17 @@ module Cbs
 
       def build_url(options = {})
         api_call = options.fetch(:api_call)       # eg. 'league/details', !!-REQUIRED-!!
-        params = build_params(options[:params])   # eg. { :SPORT => "football" }, optional
+        params = build_params(options[:params]) if options[:params]   # eg. { :SPORT => "football" }, optional
         
-        URI("http://api.cbssports.com/fantasy/#{api_call}#{params}")
+        URI("http://api.cbssports.com/fantasy/#{api_call}?#{params}response_format=JSON")
       end
 
       def build_params(params = {}) # eg. { :SPORT => "football" }
-        param_string = ["?",]
-        params.merge!( {:response_format => "JSON" } )
+        param_string = []
         params.each do |k,v|
-          param_string << "#{k.to_s}=#{v}"
+          param_string << "#{k.to_s}=#{v}&"
         end
-        param_string.join("&")
+        param_string.join("")
       end
   end
 
@@ -34,8 +33,8 @@ module Cbs
 
   class Players
     extend ApiCall
-    def self.populate(options = {})
-        players = json_response( { :api_call => 'players/average-draft-position' } )[:body][:average_draft_position][:players]
+    def self.populate
+        players = json_response( { :api_call => 'players/average-draft-position', :params => { :SPORT => "football" } } )[:body][:average_draft_position][:players]
 
         players.each do |player|
           #Certain keys from the CBS JSON response need to be reassigned for reserved words, conflicts, etc.
@@ -100,7 +99,7 @@ module Cbs
       def self.build_hash_fantasy_teams(access_token)
         teams = json_response({ :api_call => 'league/teams', :params => { :access_token => access_token } })[:body][:teams]
         # Create the slot array that gets assigned to each team
-        team_slots_array = build_slots_array
+        team_slots_array = build_slots_array(access_token)
 
         teams.map! do |team|
           # Id is already an attribute of team
@@ -112,8 +111,8 @@ module Cbs
         teams
       end
           # API call to http://api.cbssports.com/fantasy/league/rules ------------------------------
-          def self.build_slots_array
-            rules = json_response('league/rules')[:body][:rules]
+          def self.build_slots_array(access_token)
+            rules = json_response({ :api_call => 'league/rules', :params => { :access_token => access_token } })[:body][:rules]
             slots_array = []
 
             # Select each *active* position hash eg {:abbr = > "QB", :max_total = > "No Limit", :max_active = > "1", :min_active = > "1"}
