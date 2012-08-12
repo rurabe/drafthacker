@@ -8,7 +8,9 @@ class Draft < ActiveRecord::Base
   								:start_time, 
   								:league_attributes, 
   								:rounds_attributes
-  accepts_nested_attributes_for :league, :rounds
+  								
+  accepts_nested_attributes_for :league, 
+  															:rounds
 
 
 

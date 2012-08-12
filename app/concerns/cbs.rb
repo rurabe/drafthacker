@@ -58,7 +58,7 @@ module Cbs
       cbs_id = options.fetch(:cbs_id)
       access_token = options.fetch(:access_token)
 
-      { :cbs_id => options.fetch(:cbs_id),
+      { :cbs_id => cbs_id,
         :drafts_attributes =>
           [
             {
@@ -100,6 +100,13 @@ module Cbs
         teams.map! do |team|
           # Id is already an attribute of team
           team[:league_team_id] = team.delete :id
+
+          # Rename 'owners' subhash to 'owners_attributes' to trigger the construction of nested attribtues
+          team[:owners_attributes] = team.delete :owners
+
+          # Rename 'id' to 'cbs_hex_id'. Side note: Why does CBS have so many id's? CBS: Just pick one and run with it.
+          team[:owners_attributes].each { |owner| owner[:cbs_hex_id] = owner.delete :id }
+
           # Each team gets an slot array built for them
           team.merge team_slots_array
         end
