@@ -2,12 +2,13 @@ class Pick < ActiveRecord::Base
   belongs_to :player
   belongs_to :team
   belongs_to :round
+  belongs_to :draft
   attr_accessible :number,
                   :league_team_id,  # eg 10 - This one is league specific
                   :team_id          # eg 483
 
 
-  after_create :link_team_id
+  #after_create :link_team_id
 
 
 

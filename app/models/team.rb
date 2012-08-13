@@ -1,4 +1,4 @@
- class Team < ActiveRecord::Base
+class Team < ActiveRecord::Base
   belongs_to  :league
   belongs_to  :user
   has_many    :slots
@@ -20,7 +20,7 @@
   accepts_nested_attributes_for :slots,
                                 :owners
 
-  after_commit :link_to_user
+  after_create :link_to_user
 
   private
 

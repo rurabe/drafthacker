@@ -13,5 +13,21 @@ class Draft < ActiveRecord::Base
   															:rounds
 
 
+  after_create :link_teams_to_picks
 
-end
+  private
+
+    def link_teams_to_picks
+      teams = self.league.teams
+
+      self.rounds.each do |round|
+        round.picks.each do |pick|
+          this_pick_team = teams.where(:league_team_id => pick.league_team_id).first
+          pick.team_id = this_pick_team.id
+          #pick.save
+        end
+      end
+      self.save
+    end
+
+  end
