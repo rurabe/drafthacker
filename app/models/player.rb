@@ -15,8 +15,12 @@ class Player < ActiveRecord::Base
                   :pro_team,
                   :bye_week,
                   :is_locked,
-                  :opponent
-
-
-
+                  :opponent,
+                  :pct,
+                  :change,
+                  :avg,
+                  :position,
+                  :high,
+                  :low,
+                  :rank
 end

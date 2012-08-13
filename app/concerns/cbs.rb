@@ -29,12 +29,20 @@ module Cbs
       end
   end
 
+  class Draft
+    extend ApiCall
 
+    def self.status( options = {} )
+      access_token = options.fetch(:access_token)
+      status = json_response( { :api_call => 'league/draft/results', :params => { :access_token => access_token } } ) [:body][:draft_results]
+    end
+  end
 
   class Players
     extend ApiCall
-    def self.populate
-        players = json_response( { :api_call => 'players/average-draft-position', :params => { :SPORT => "football" } } )[:body][:average_draft_position][:players]
+    # Populates the db with all players or updates them if they already exist. Approximately 2827 total. 
+    def self.populate 
+        players = json_response( { :api_call => 'players/list', :params => { :SPORT => "football" } } )[:body][:players]
 
         players.each do |player|
           #Certain keys from the CBS JSON response need to be reassigned for reserved words, conflicts, etc.
@@ -42,16 +50,14 @@ module Cbs
           player[:first_name] = player.delete :firstname
           player[:last_name] = player.delete :lastname
           player[:full_name] = player.delete :fullname
-          player_obj = Player.where(:cbs_id => player[:cbs_id])
+          player_obj = Player.where(:cbs_id => player[:cbs_id]).first
           if player_obj
-            player_obj.update(player)
+            player_obj.update_attributes(player)
           else
             Player.create(player)
           end
         end
     end
-
-    # TODO update function
   end
 
 
