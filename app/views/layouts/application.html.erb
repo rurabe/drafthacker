@@ -29,16 +29,12 @@
       </div>
     </div>
 
-    <div class="container-fluid" style="width: 775px">
-      <div class="row-fluid">
-        <div class="span12">
+    <div class="container-fluid" style="width: 775 px">
 
         	<% flash.each do |key,message| %>
         		<%= content_tag :div, message, :class => "alert alert-#{key}" %>
         	<% end %>
           <%= yield %>
-        </div>
-      </div><!--/row-->
 
       <footer>
         <p>&copy; Company 2012</p>

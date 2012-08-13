@@ -5,41 +5,56 @@
   <h2 align="right"><%= @user.cbs_id %><h2>
 </div>
 
-<div class='row'>
-  <div class='span8'>
-    <div class='well'>
+<div class='container-fluid'>
+  <div class='row'>
+    <div class='span8'>
+      <div class='well'>
+          <ul>
+            <li>These are players!! Yay.</li>
+          </ul>
+      </div>
+    </div>
+    <div class='span4'>
+      <div class='well'>
+        <h3>Live Feed:</h3>
+        <div id='feed' style='height:150px; overflow: auto; color: gray; padding-down:5px'>
+        </div>
+<!--         <p>You have picks:</p> 
         <ul>
-          <li>These are players!! Yay.</li>
+          <% @team.picks.order('number ASC').each do |p| %>
+            <li>Round <%= p.round.number %> - <span class="badge inverse">pick <%= p.number %></span></li>
+          <% end %>
         </ul>
-    </div>
-  </div>
-  <div class='span4'>
-    <div class='well'>
-      <p>You have picks:</p> 
-      <ul>
-        <% @team.picks.order('number ASC').each do |p| %>
-          <li>Round <%= p.round.number %> - <span class="badge inverse">pick <%= p.number %></span></li>
-        <% end %>
-      </ul>
-      <p>And you need to fill these roster spots:</p> 
-      <ul>
-        <% @team.slots.order(:created_at).each do |s| %>
-          <li><span class="label important"><%= s.eligible_positions %></span></li>
-        <% end %>
-      </ul>
-      <p>Here are the clowns you will be dominating:</p>
-      <ol>
-        <% @draft.rounds.where(:number => 1).first.picks.order('number ASC').each do |p| %>
-          <li> <%= image_tag p.team.logo, :size => "30x30" %> - <%= p.team.name %> <%= "Yeah, you're a clown" if p.team == @team %></li>
-        <% end %>
-      </ol>
+        <p>Here are the clowns you will be dominating:</p>
+        <ol>
+          <% @draft.rounds.where(:number => 1).first.picks.order('number ASC').each do |p| %>
+            <li> <%= image_tag p.team.logo, :size => "30x30" %> - <%= p.team.name %> <%= "Yeah, you're a clown" if p.team == @team %></li>
+          <% end %>
+        </ol>
+        <ul> --> 
+      </div>
+      <div class='well'>
+        <table class='table table-striped'>
+          <h3>Your Roster:</h3>  
+          <tbody>
+          <% @team.slots.order(:created_at).each do |s| %>
+          <tr>
+            <td>
+            <span class="label important"><%= s.eligible_positions %></span>
+            </td>
+            <td> -- 
+            </td>
+          </tr>
+          <% end %>
+        </tbody>
+        </table>
+      </div>
 
     </div>
   </div>
-</div>
-<div class='row'>
-  <div class='span12'>
-
+  <div class='row'>
+    <div class='span12'>
+    </div>
   </div>
 </div>
 
