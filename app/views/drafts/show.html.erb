@@ -28,11 +28,11 @@
         <% end %>
       </ul>
       <p>Here are the clowns you will be dominating:</p>
-      <ul>
+      <ol>
         <% @draft.rounds.where(:number => 1).first.picks.order('number ASC').each do |p| %>
           <li> <%= image_tag p.team.logo, :size => "30x30" %> - <%= p.team.name %> <%= "Yeah, you're a clown" if p.team == @team %></li>
         <% end %>
-      </ul>
+      </ol>
 
     </div>
   </div>
