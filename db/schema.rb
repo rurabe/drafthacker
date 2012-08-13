@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120812202201) do
+ActiveRecord::Schema.define(:version => 20120812214805) do
 
   create_table "drafts", :force => true do |t|
     t.integer  "user_id"
@@ -128,10 +128,10 @@ ActiveRecord::Schema.define(:version => 20120812202201) do
     t.string   "long_abbr"
     t.boolean  "logged_in_team"
     t.string   "short_name"
-    t.string   "logo"
     t.string   "abbr"
     t.string   "owners"
     t.integer  "league_team_id"
+    t.text     "logo"
   end
 
   add_index "teams", ["league_id"], :name => "index_teams_on_league_id"

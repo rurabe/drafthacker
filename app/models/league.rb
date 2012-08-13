@@ -31,7 +31,6 @@ class League < ActiveRecord::Base
                   :timestamp,
                   :teams_attributes
 
-  #validates_presence_of :rounds, :num_teams
 
 
 end
