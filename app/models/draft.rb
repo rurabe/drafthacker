@@ -24,7 +24,6 @@ class Draft < ActiveRecord::Base
         round.picks.each do |pick|
           this_pick_team = teams.where(:league_team_id => pick.league_team_id).first
           pick.team_id = this_pick_team.id
-          #pick.save
         end
       end
       self.save
