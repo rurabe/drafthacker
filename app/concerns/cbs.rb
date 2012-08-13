@@ -35,6 +35,12 @@ module Cbs
     def self.status( options = {} )
       access_token = options.fetch(:access_token)
       status = json_response( { :api_call => 'league/draft/results', :params => { :access_token => access_token } } ) [:body][:draft_results]
+      status[:picks].each do |pick|
+        pick = Pick.where(:league_id => whatever, :number => pick[:overall_pick])
+        player = Player.where(:cbs_id => pick[:player][:id])
+        pick.player = player
+
+      end
     end
   end
 
