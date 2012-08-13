@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120811032503) do
+ActiveRecord::Schema.define(:version => 20120812214805) do
 
   create_table "drafts", :force => true do |t|
     t.integer  "user_id"
@@ -55,6 +55,15 @@ ActiveRecord::Schema.define(:version => 20120811032503) do
 
   add_index "leagues", ["draft_id"], :name => "index_leagues_on_draft_id"
 
+  create_table "owners", :force => true do |t|
+    t.boolean  "commissioner"
+    t.string   "name"
+    t.string   "cbs_hex_id"
+    t.integer  "team_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
   create_table "picks", :force => true do |t|
     t.integer  "player_id"
     t.integer  "team_id"
@@ -70,15 +79,15 @@ ActiveRecord::Schema.define(:version => 20120811032503) do
   add_index "picks", ["team_id"], :name => "index_picks_on_team_id"
 
   create_table "players", :force => true do |t|
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
     t.string   "type"
     t.integer  "cbs_id"
     t.string   "first_name"
     t.string   "full_name"
     t.string   "last_name"
     t.string   "on_waivers"
-    t.string   "position"
+    t.string   "primary_position"
     t.string   "pro_status"
     t.string   "pro_team"
     t.string   "bye_week"
@@ -86,14 +95,6 @@ ActiveRecord::Schema.define(:version => 20120811032503) do
     t.string   "opponent"
     t.integer  "slot_id"
     t.string   "icons"
-    t.integer  "high"
-    t.integer  "low"
-    t.string   "profile_link"
-    t.integer  "pct"
-    t.integer  "change"
-    t.integer  "avg"
-    t.string   "profile_url"
-    t.integer  "rank"
   end
 
   add_index "players", ["slot_id"], :name => "index_players_on_slot_id"
@@ -127,10 +128,10 @@ ActiveRecord::Schema.define(:version => 20120811032503) do
     t.string   "long_abbr"
     t.boolean  "logged_in_team"
     t.string   "short_name"
-    t.string   "logo"
     t.string   "abbr"
     t.string   "owners"
     t.integer  "league_team_id"
+    t.text     "logo"
   end
 
   add_index "teams", ["league_id"], :name => "index_teams_on_league_id"
