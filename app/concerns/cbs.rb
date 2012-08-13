@@ -42,7 +42,12 @@ module Cbs
           player[:first_name] = player.delete :firstname
           player[:last_name] = player.delete :lastname
           player[:full_name] = player.delete :fullname
-          Player.create(player)
+          player_obj = Player.where(:cbs_id => player[:cbs_id])
+          if player_obj
+            player_obj.update(player)
+          else
+            Player.create(player)
+          end
         end
     end
 
