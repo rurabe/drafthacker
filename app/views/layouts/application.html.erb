@@ -22,7 +22,8 @@
           <a class="brand" href="#">Drafthacker</a>
           <div class="container-fluid">
             <ul class="nav">
-              <li><%= link_to "Home", root_path  %></li>
+              <li><%=link_to @user.team.name %></li>
+              <li><%=link_to @user.team.owners.first.name %></li>
             </ul>
           </div>
         </div>
