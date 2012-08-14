@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120812214805) do
+ActiveRecord::Schema.define(:version => 20120813233402) do
 
   create_table "drafts", :force => true do |t|
     t.integer  "user_id"
@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(:version => 20120812214805) do
     t.datetime "updated_at",     :null => false
     t.integer  "number"
     t.integer  "league_team_id"
+    t.integer  "draft_id"
   end
 
   add_index "picks", ["player_id"], :name => "index_picks_on_player_id"
@@ -94,15 +95,14 @@ ActiveRecord::Schema.define(:version => 20120812214805) do
     t.string   "is_locked"
     t.string   "opponent"
     t.integer  "slot_id"
-    t.string   "icons"
+    t.decimal  "pct"
+    t.decimal  "change"
+    t.decimal  "avg"
     t.integer  "high"
     t.integer  "low"
-    t.string   "profile_link"
-    t.integer  "pct"
-    t.integer  "change"
-    t.integer  "avg"
-    t.string   "profile_url"
     t.integer  "rank"
+    t.string   "icons_injury"
+    t.string   "icons_headline"
   end
 
   add_index "players", ["slot_id"], :name => "index_players_on_slot_id"

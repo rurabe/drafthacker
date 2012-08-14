@@ -10,6 +10,8 @@ class DraftsController < ApplicationController
       @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => 'b2c7c77e1b22e0f4' } )
     end
 
+    @access = params[:access_token]
+    # @picks = Pick.all(:number)
     @user = User.new(@mega_hash)
     @user.save
     @draft = @user.drafts.first
@@ -18,7 +20,7 @@ class DraftsController < ApplicationController
     @slot = @team.slots.first
     @round = @draft.rounds.first
     @pick = @round.picks.first
-    @players = Players.all
+    @players = Player.all
   end
 
   def index
