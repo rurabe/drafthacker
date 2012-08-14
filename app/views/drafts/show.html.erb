@@ -5,57 +5,97 @@
   <h2 align="right"><%= @user.cbs_id %><h2>
 </div>
 
-<div class='row'>
+<!--********** Everything but the header ********** -->
+
+<div class='container-fluid'>
+  <div class='row-fluid'>
+
+<!--********** The Left Panel ********** -->
   <div class='span8'>
-    <div class='well'>
-      <p>These guys have been drafted:</p>
-        <ul>
-          <% @status[:picks].each do |pick| %>
-          <li><%= pick[:player][:fullname] %></li>
-          <% end %>
-        </ul>
+      <div class='panel'>
+      <div class='well' id='left-panel'>
+        <h3 class='rounded-corners'>All Players:</h3>
+        <div id='players-scroll'>
+          <table class='table table-striped'>
+            <tbody>
+              <% @players.each do |s| %>
+              <tr>
+                <td>
+                  <span class="label important"><%= s.position %></span>
+                </td>
+                <td>
+                   <%= s.first_name %>
+                </td>
+                <td>
+                   <%= s.last_name %>
+                </td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
-  <div class='span4'>
-    <div class='well'>
-      <p>You have picks:</p> 
-      <ul>
-        <% @team.picks.order('number ASC').each do |p| %>
-          <li>Round <%= p.round.number %> - <span class="badge inverse">pick <%= p.number %></span></li>
-        <% end %>
-      </ul>
-      <p>And you need to fill these roster spots:</p> 
-      <ul>
-        <% @team.slots.order(:created_at).each do |s| %>
-          <li><span class="label important"><%= s.eligible_positions %></span></li>
-        <% end %>
-      </ul>
-      <p>Here are the clowns you will be dominating:</p>
-      <ol>
-        <% @draft.rounds.where(:number => 1).first.picks.order('number ASC').each do |p| %>
-          <li> <%= image_tag p.team.logo, :size => "30x30" %> - <%= p.team.name %> <%= "Yeah, you're a clown" if p.team == @team %></li>
-        <% end %>
-      </ol>
 
+<!--********** The Right Panel ********** -->
+
+    <div class='span4'>
+      <div class='panel'>
+<!--********** The Feed Box *********** -->
+
+        <div class='well' id='feed'>
+          <h3>Live Feed:</h3>
+          <div id='feed-scroll'>
+          </div>
+  <!--         <p>You have picks:</p>
+          <ul>
+            <% @team.picks.order('number ASC').each do |p| %>
+              <li>Round <%= p.round.number %> - <span class="badge inverse">pick <%= p.number %></span></li>
+            <% end %>
+          </ul>
+          <p>Here are the clowns you will be dominating:</p>
+          <ol>
+            <% @draft.rounds.where(:number => 1).first.picks.order('number ASC').each do |p| %>
+              <li> <%= image_tag p.team.logo, :size => "30x30" %> - <%= p.team.name %> <%= "Yeah, you're a clown" if p.team == @team %></li>
+            <% end %>
+          </ol>
+          <ul> -->
+        </div>
+
+<!--********** The Roster Box *********** -->
+
+        <div class='well'>
+          <table class='table table-striped'>
+            <h3>Your Roster:</h3>
+            <tbody>
+            <% @team.slots.order(:created_at).each do |s| %>
+            <tr>
+              <td>
+              <span class="label important"><%= s.eligible_positions %></span>
+              </td>
+              <td> --
+              </td>
+            </tr>
+            <% end %>
+          </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-<div class='row'>
-  <div class='span12' id="status">
-    <%= @status.inspect %>
-  </div>
-</div>
 
 
-<script src="http://code.jquery.com/jquery-latest.js"> 
-    
-    setInterval(alert('this shit ran'), 3000)
+// <script src="http://code.jquery.com/jquery-latest.js">
 
-    $.get('http://api.cbssports.com/fantasy/league/draft/results?<%=@access%>&response_format=JSON', function(data){
-      $('#status').hide;
-      alert('this shit ran');
-    })();
-</script>
+//     setInterval(alert('this shit ran'), 3000)
+
+//     $.get('http://api.cbssports.com/fantasy/league/draft/results?<%=@access%>&response_format=JSON', function(data){
+//       $('#status').hide;
+//       alert('this shit ran');
+//     })();
+// </script>
 
 
 <p>Your CBS ID is <%= @user.cbs_id %></p>
@@ -65,8 +105,8 @@
 <p>Your league name is <%= @league.name %> </p>
 
 <p>Your team name is <%= @team.name %>, which is pretty unimaginative </p>
- 
-<p>You have picks:</p> 
+
+<p>You have picks:</p>
   <ul>
     <% @team.picks.order('number ASC').each do |p| %>
       <li>Round <%= p.round.number %> - Pick <%= p.number %></li>

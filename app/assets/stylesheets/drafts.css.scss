@@ -1,3 +1,45 @@
 // Place all the styles related to the drafts controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.well#players{
+
+}
+
+#players-scroll {
+
+	height: 745px;
+	overflow: auto;
+	padding-down: 10px;
+
+}
+
+.well#feed{
+
+	height: 180px;
+
+}
+
+#feed-scroll{
+
+	height:150px;
+	overflow: auto;
+	color: gray;
+	padding-down:5px
+
+}
+
+.well#roster{
+	
+}
+
+.well#left-panel{
+
+	height:775px;
+}
+
+.label.important#chill{
+
+	width:20px;
+	
+}
