@@ -41,7 +41,12 @@ module Cbs
       status = json_response( { :api_call => 'league/draft/results', :params => { :access_token => access_token } } ) [:body][:draft_results]
 
       # Set players to picks and picks to slots
-      status[:picks].each do |pick|
+
+      # num_filled_picks = Pick.all.count - Pick.where(:draft_id => draft_id, :player_id => nil).count
+      # picks = Pick.where(:draft_id => draft_id).sort(:number)
+      # new_picks = picks.slice(num_filled_picks..-1)
+      # new_picks.each do |pick|
+        status[:picks].each do |pick|
         system_pick = Pick.where(:draft_id => draft_id , :number => pick[:overall_pick]).first
         system_pick.update_attributes(:player_id => pick[:player][:id])
         
