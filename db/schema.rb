@@ -80,8 +80,8 @@ ActiveRecord::Schema.define(:version => 20120813233402) do
   add_index "picks", ["team_id"], :name => "index_picks_on_team_id"
 
   create_table "players", :force => true do |t|
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
     t.string   "type"
     t.integer  "cbs_id"
     t.string   "first_name"

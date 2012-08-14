@@ -14,17 +14,20 @@
   <div class='span8'>
       <div class='panel'>
       <div class='well' id='left-panel'>
-        <h3 class='rounded-corners' style='color:#33B5E5'>All Players:</h3> 
+        <h3 class='rounded-corners'>All Players:</h3>
         <div id='players-scroll'>
-          <table class='table table-striped'> 
+          <table class='table table-striped'>
             <tbody>
-              <% @players.all.each do |s| %>
+              <% @players.each do |s| %>
               <tr>
                 <td>
-                  <span class="label important"><%= s.position %>&nbsp<%=s.name%></span>
+                  <span class="label important"><%= s.position %></span>
                 </td>
                 <td>
-                   -- 
+                   <%= s.first_name %>
+                </td>
+                <td>
+                   <%= s.last_name %>
                 </td>
               </tr>
               <% end %>
@@ -45,7 +48,7 @@
           <h3>Live Feed:</h3>
           <div id='feed-scroll'>
           </div>
-  <!--         <p>You have picks:</p> 
+  <!--         <p>You have picks:</p>
           <ul>
             <% @team.picks.order('number ASC').each do |p| %>
               <li>Round <%= p.round.number %> - <span class="badge inverse">pick <%= p.number %></span></li>
@@ -57,21 +60,21 @@
               <li> <%= image_tag p.team.logo, :size => "30x30" %> - <%= p.team.name %> <%= "Yeah, you're a clown" if p.team == @team %></li>
             <% end %>
           </ol>
-          <ul> --> 
+          <ul> -->
         </div>
 
 <!--********** The Roster Box *********** -->
 
         <div class='well'>
           <table class='table table-striped'>
-            <h3>Your Roster:</h3>  
+            <h3>Your Roster:</h3>
             <tbody>
             <% @team.slots.order(:created_at).each do |s| %>
             <tr>
               <td>
               <span class="label important"><%= s.eligible_positions %></span>
               </td>
-              <td> -- 
+              <td> --
               </td>
             </tr>
             <% end %>
@@ -84,8 +87,8 @@
 </div>
 
 
-// <script src="http://code.jquery.com/jquery-latest.js"> 
-    
+// <script src="http://code.jquery.com/jquery-latest.js">
+
 //     setInterval(alert('this shit ran'), 3000)
 
 //     $.get('http://api.cbssports.com/fantasy/league/draft/results?<%=@access%>&response_format=JSON', function(data){
@@ -102,8 +105,8 @@
 <p>Your league name is <%= @league.name %> </p>
 
 <p>Your team name is <%= @team.name %>, which is pretty unimaginative </p>
- 
-<p>You have picks:</p> 
+
+<p>You have picks:</p>
   <ul>
     <% @team.picks.order('number ASC').each do |p| %>
       <li>Round <%= p.round.number %> - Pick <%= p.number %></li>

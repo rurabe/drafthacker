@@ -20,7 +20,7 @@ class DraftsController < ApplicationController
     @slot = @team.slots.first
     @round = @draft.rounds.first
     @pick = @round.picks.first
-    @players = Player.all
+    @players = Player.where(:position => ['WR', 'QB', 'RB', 'K'])
   end
 
   def index
