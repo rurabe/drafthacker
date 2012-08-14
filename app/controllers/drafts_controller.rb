@@ -6,7 +6,7 @@ class DraftsController < ApplicationController
       @access = params['access_token']
       @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => params['user_id'] } )
     else
-      @access = 'U2FsdGVkX1_dqYNjfcxVhErfEI9MqM7-7hNf7v6d64EzPGAjzKpHFAe8cA3jHI2G_KARduk8IlB7L6WNbPbzlXCz0vpOfb9VebWtJJj2A_mPprAYtwtKY1BeMDB_XcdW'
+      @access = 'U2FsdGVkX1-PJB-AOD6mt4-EtlEufOn4YqtVtDngv-ZdT_JrpxBP3dw66PO_iCbknecw63_XXMEkBC2zVRmPQhUTgfk0KvQ_nDMahgM96JC6rdqMqGzb4P8vttFOzSBz'
       @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => 'b2c7c77e1b22e0f4' } )
     end
 
@@ -18,6 +18,7 @@ class DraftsController < ApplicationController
     @slot = @team.slots.first
     @round = @draft.rounds.first
     @pick = @round.picks.first
+    @players = Players.all
   end
 
   def index

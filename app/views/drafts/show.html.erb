@@ -18,17 +18,15 @@
         <div id='players-scroll'>
           <table class='table table-striped'> 
             <tbody>
-              <% 3.times do %>
-              <% @team.slots.order(:created_at).each do |s| %>
+              <% Players.all.each do |s| %>
               <tr>
                 <td>
-                  <span class="label important" id="chill"><%= s.eligible_positions %></span>
+                  <span class="label important"><%= s.position %>&nbsp<%=s.name%></span>
                 </td>
                 <td>
                    -- 
                 </td>
               </tr>
-              <% end %>
               <% end %>
             </tbody>
           </table>
