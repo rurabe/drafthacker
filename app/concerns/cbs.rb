@@ -29,29 +29,53 @@ module Cbs
       end
   end
 
+  class Draft
+    extend ApiCall
 
+    def self.update( options = {} ) #eg. { :access_token => "vksdhgvkhsdbvksdiugweiufgwiusd", :draft_id => 6362 }
+      # Setting variables from the options
+      draft_id = options.fetch(:draft_id)
+      access_token = options.fetch(:access_token)
+
+      # Get the JSON from the API
+      status = json_response( { :api_call => 'league/draft/results', :params => { :access_token => access_token } } ) [:body][:draft_results]
+
+      # Set players to picks and picks to slots
+      status[:picks].each do |pick|
+        system_pick = Pick.where(:draft_id => draft_id , :number => pick[:overall_pick]).first
+        system_pick.update_attributes(:player_id => pick[:player][:id])
+        
+        #links picks to slots. needs refactoring and more testing
+        slots = system_pick.team.slots.where(:eligible_positions => pick[:player][:position], :player_id => nil)
+        if !slots.empty?
+          slots.first.update_attributes(:player_id => pick[:player][:id])
+        else
+          slot = system_pick.team.slots.where(:eligible_positions => "RS", :player_id => nil).first
+          slot.update_attributes(:player_id => pick[:player][:id]) if slot
+        end
+      end
+    end
+  end
 
   class Players
     extend ApiCall
-    def self.populate
-        players = json_response( { :api_call => 'players/average-draft-position', :params => { :SPORT => "football" } } )[:body][:average_draft_position][:players]
+    # Populates the db with all players or updates them if they already exist. Approximately 2827 total. 
+    def self.populate 
+        players = json_response( { :api_call => 'players/list', :params => { :SPORT => "football" } } )[:body][:players]
 
         players.each do |player|
           #Certain keys from the CBS JSON response need to be reassigned for reserved words, conflicts, etc.
-          player[:cbs_id] = player.delete :id
           player[:first_name] = player.delete :firstname
           player[:last_name] = player.delete :lastname
           player[:full_name] = player.delete :fullname
-          player_obj = Player.where(:cbs_id => player[:cbs_id])
-          if player_obj
-            player_obj.update(player)
-          else
-            Player.create(player)
-          end
+          player[:icons_headline] = player[:icons][:headline] if player[:icons]
+          player[:icons_injury] = player[:icons][:injury] if player[:icons]
+          player.delete :icons
+          player_obj = Player.where(:id => player[:id]).first_or_initialize(player)
+          player_obj.update_attributes(player) if !player_obj.new_record?
+          player_obj.save if player_obj.new_record?
         end
     end
-
-    # TODO update function
   end
 
 
