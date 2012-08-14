@@ -59,22 +59,30 @@ module Cbs
 
   class Players #--------------------------------------------------------------------------------------------------------
     extend ApiCall
+
+    def self.populate_all
+      populate
+      populate_adp
+      populate_auction_values
+    end
+
     # Populates the db with all players or updates them if they already exist. Approximately 2827 total. 
     def self.populate
       players = json_response( { :api_call => 'players/list', :params => { :SPORT => "football" } } )[:body][:players]
       update_or_create(players)
     end
 
+    # Adds ADP information to Players
     def self.populate_adp
       players = json_response( { :api_call => 'players/average-draft-position', :params => { :SPORT => "football" } } )[:body][:average_draft_position][:players]
       update_or_create(players)
     end
 
+    #Adds Auction Values to Players
     def self.populate_auction_values
+      # A brief discussion of these can be found at http://fantasynews.cbssports.com/fantasyfootball/rankings
       update_or_create(build_auction_values,false)
     end
-
-
 
 
     private
@@ -117,7 +125,7 @@ module Cbs
           # Convert it into a more useful format
           data.each do |k,v|
             # Put these more useful hashes into the array
-            auction_values << {:id => k, "av_#{source}".to_sym => v }
+            auction_values << {:id => k.to_s, "av_#{source}".to_sym => v }
           end
         end
         # Return the array
