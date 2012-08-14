@@ -60,22 +60,44 @@ module Cbs
   class Players
     extend ApiCall
     # Populates the db with all players or updates them if they already exist. Approximately 2827 total. 
-    def self.populate 
-        players = json_response( { :api_call => 'players/list', :params => { :SPORT => "football" } } )[:body][:players]
+    def self.populate
+      players = json_response( { :api_call => 'players/list', :params => { :SPORT => "football" } } )[:body][:players]
+      update_or_create(players)
+    end
 
+    def self.populate_adp
+      players = json_response( { :api_call => 'players/average-draft-position', :params => { :SPORT => "football" } } )[:body][:average_draft_position][:players]
+      update_or_create(players)
+    end
+
+    private
+      def self.update_or_create(players)
+        # Take each player hash
         players.each do |player|
-          #Certain keys from the CBS JSON response need to be reassigned for reserved words, conflicts, etc.
-          player[:first_name] = player.delete :firstname
-          player[:last_name] = player.delete :lastname
-          player[:full_name] = player.delete :fullname
-          player[:icons_headline] = player[:icons][:headline] if player[:icons]
-          player[:icons_injury] = player[:icons][:injury] if player[:icons]
-          player.delete :icons
+          # Clean the hash for reserved words and to match our schema
+          clean_hash(player)
+          # Where tries to find the object in the current records. If nil, it creates a new one.
           player_obj = Player.where(:id => player[:id]).first_or_initialize(player)
+          # If the record is not new, run update attributes on it.
           player_obj.update_attributes(player) if !player_obj.new_record?
+          # If it is a new object, save the record (since update_attributes saves by default)
           player_obj.save if player_obj.new_record?
         end
-    end
+      end
+
+      def self.clean_hash(hash)
+        #Certain keys from the CBS JSON response need to be reassigned for reserved words, conflicts, etc.
+        hash[:first_name] = hash.delete :firstname
+        hash[:last_name] = hash.delete :lastname
+        hash[:full_name] = hash.delete :fullname
+        if hash[:icons]
+          hash[:icons_headline] = hash[:icons][:headline]
+          hash[:icons_injury] = hash[:icons][:injury]
+          hash.delete :icons
+        end
+        hash
+      end
+
   end
 
 
