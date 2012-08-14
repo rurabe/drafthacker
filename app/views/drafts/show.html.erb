@@ -8,8 +8,11 @@
 <div class='row'>
   <div class='span8'>
     <div class='well'>
+      <p>These guys have been drafted:</p>
         <ul>
-          <li>These are players!! Yay.</li>
+          <% @status[:picks].each do |pick| %>
+          <li><%= pick[:player][:fullname] %></li>
+          <% end %>
         </ul>
     </div>
   </div>
@@ -38,10 +41,21 @@
   </div>
 </div>
 <div class='row'>
-  <div class='span12'>
-
+  <div class='span12' id="status">
+    <%= @status.inspect %>
   </div>
 </div>
+
+
+<script src="http://code.jquery.com/jquery-latest.js"> 
+    
+    setInterval(alert('this shit ran'), 3000)
+
+    $.get('http://api.cbssports.com/fantasy/league/draft/results?<%=@access%>&response_format=JSON', function(data){
+      $('#status').hide;
+      alert('this shit ran');
+    })();
+</script>
 
 
 <p>Your CBS ID is <%= @user.cbs_id %></p>

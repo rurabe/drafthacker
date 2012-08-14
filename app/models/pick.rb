@@ -5,7 +5,9 @@ class Pick < ActiveRecord::Base
   belongs_to :draft
   attr_accessible :number,
                   :league_team_id,  # eg 10 - This one is league specific
-                  :team_id          # eg 483
+                  :team_id,          # eg 483
+                  :draft_id,
+                  :player_id
 
 
   #after_create :link_team_id

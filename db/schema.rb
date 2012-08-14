@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120812214805) do
+ActiveRecord::Schema.define(:version => 20120813233402) do
 
   create_table "drafts", :force => true do |t|
     t.integer  "user_id"
@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(:version => 20120812214805) do
     t.datetime "updated_at",     :null => false
     t.integer  "number"
     t.integer  "league_team_id"
+    t.integer  "draft_id"
   end
 
   add_index "picks", ["player_id"], :name => "index_picks_on_player_id"
@@ -79,22 +80,29 @@ ActiveRecord::Schema.define(:version => 20120812214805) do
   add_index "picks", ["team_id"], :name => "index_picks_on_team_id"
 
   create_table "players", :force => true do |t|
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
     t.string   "type"
     t.integer  "cbs_id"
     t.string   "first_name"
     t.string   "full_name"
     t.string   "last_name"
     t.string   "on_waivers"
-    t.string   "primary_position"
+    t.string   "position"
     t.string   "pro_status"
     t.string   "pro_team"
     t.string   "bye_week"
     t.string   "is_locked"
     t.string   "opponent"
     t.integer  "slot_id"
-    t.string   "icons"
+    t.decimal  "pct"
+    t.decimal  "change"
+    t.decimal  "avg"
+    t.integer  "high"
+    t.integer  "low"
+    t.integer  "rank"
+    t.string   "icons_injury"
+    t.string   "icons_headline"
   end
 
   add_index "players", ["slot_id"], :name => "index_players_on_slot_id"
