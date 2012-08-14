@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120813233402) do
+ActiveRecord::Schema.define(:version => 20120814101351) do
 
   create_table "drafts", :force => true do |t|
     t.integer  "user_id"
@@ -80,8 +80,8 @@ ActiveRecord::Schema.define(:version => 20120813233402) do
   add_index "picks", ["team_id"], :name => "index_picks_on_team_id"
 
   create_table "players", :force => true do |t|
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
     t.string   "type"
     t.integer  "cbs_id"
     t.string   "first_name"
@@ -103,6 +103,13 @@ ActiveRecord::Schema.define(:version => 20120813233402) do
     t.integer  "rank"
     t.string   "icons_injury"
     t.string   "icons_headline"
+    t.integer  "av_cbs"
+    t.integer  "av_cbs_ppr"
+    t.integer  "av_dave_richard"
+    t.integer  "av_dave_richard_ppr"
+    t.integer  "av_jamey_eisenberg"
+    t.integer  "av_jamey_eisenberg_ppr"
+    t.integer  "av_nathan_zegura"
   end
 
   add_index "players", ["slot_id"], :name => "index_players_on_slot_id"
