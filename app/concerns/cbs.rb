@@ -40,10 +40,19 @@ module Cbs
       # Get the JSON from the API
       status = json_response( { :api_call => 'league/draft/results', :params => { :access_token => access_token } } ) [:body][:draft_results]
 
-      # Set players to picks
+      # Set players to picks and picks to slots
       status[:picks].each do |pick|
         system_pick = Pick.where(:draft_id => draft_id , :number => pick[:overall_pick]).first
         system_pick.update_attributes(:player_id => pick[:player][:id])
+        
+        #links picks to slots. needs refactoring and more testing
+        slots = system_pick.team.slots.where(:eligible_positions => pick[:player][:position], :player_id => nil)
+        if !slots.empty?
+          slots.first.update_attributes(:player_id => pick[:player][:id])
+        else
+          slot = system_pick.team.slots.where(:eligible_positions => "RS", :player_id => nil).first
+          slot.update_attributes(:player_id => pick[:player][:id]) if slot
+        end
       end
     end
   end
