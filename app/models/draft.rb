@@ -2,6 +2,7 @@ class Draft < ActiveRecord::Base
   belongs_to :user
   has_one :league
   has_many :rounds
+  has_many :picks, :through => :rounds
 
 
   attr_accessible :name, 

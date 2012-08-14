@@ -5,4 +5,15 @@ class Round < ActiveRecord::Base
   attr_accessible :number,
   								:picks_attributes
   accepts_nested_attributes_for :picks
+
+  after_create :link_picks_to_draft
+  
+
+  private
+
+  	def link_picks_to_draft
+  		self.picks.each do |pick|
+  			pick.draft = self.draft
+  		end
+  	end
 end

@@ -4,10 +4,11 @@ class Player < ActiveRecord::Base
   has_many :picks
 
                   #cbs players api data:
-  attr_accessible :cbs_id,
+  attr_accessible :id,
                   :first_name,
                   :full_name,
-                  :icons, 
+                  :icons_injury,
+                  :icons_headline,
                   :last_name,
                   :on_waivers,
                   :primary_position,
@@ -23,4 +24,5 @@ class Player < ActiveRecord::Base
                   :high,
                   :low,
                   :rank
+
 end
