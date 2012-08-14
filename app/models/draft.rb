@@ -1,6 +1,7 @@
 class Draft < ActiveRecord::Base
   belongs_to :user
   has_one :league
+  has_many :teams, :through => :league
   has_many :rounds
   has_many :picks, :through => :rounds
 
@@ -19,14 +20,16 @@ class Draft < ActiveRecord::Base
   private
 
     def link_teams_to_picks
-      teams = self.league.teams
+      this_draft = Draft.where(:id => self).includes(:picks,:teams).first
 
-      self.rounds.each do |round|
-        round.picks.each do |pick|
-          this_pick_team = teams.where(:league_team_id => pick.league_team_id).first
-          pick.team_id = this_pick_team.id
+        this_draft.teams.each do |team|
+          team_picks = this_draft.picks.where(:league_team_id => team.league_team_id)
+
+          team_picks.each do |pick| 
+            pick.team = team
+            pick.draft = self
+          end
         end
-      end
       self.save
     end
 
