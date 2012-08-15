@@ -7,9 +7,13 @@
 <!--********** The Left Panel / Players ********** -->
 
   <div class='span8'>
-      <div class='panel'>
+    <div class='panel'>
       <div class='well' id='left-panel'>
-        <h3 class='rounded-corners'>All Players:</h3>
+        <form class="well form-search">
+          <h3>Players:
+          <input type="text" class="search">
+            <button type="submit" class="btn">Search</button>
+        </form></h3>
         <div id='players-scroll'>
           <table class='table table-striped'>
             <tbody>
@@ -23,6 +27,9 @@
                 </td>
                 <td>
                    <%= s.last_name %>
+                </td>
+                <td>
+                   <%= s.pro_team %>
                 </td>
               </tr>
               <% end %>

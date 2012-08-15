@@ -25,14 +25,17 @@ class DraftsController < ApplicationController
   end
 
   def update
+    # Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.draft.first.id)
     # Cbs::Players.update
     @user = User.find_by_cbs_id(params[:user_id])
+    # Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first.id)
+    # Cbs::Players.update
     # For Players Partial
     @players = Player.where(:position => ['WR', 'QB', 'RB', 'K'])
-
+    # @players.order_by([:avg, :desc])
     @team = @user.team
-    @feed = { 'feed' => "This is a feed item" }.to_json.html_safe #Cbs::Feed
-    
+    @feed = { 'feed' => "This is a feed item"}.to_json.html_safe #Cbs::Feed
+
     respond_to do |format|
       format.js
     end
