@@ -34,7 +34,6 @@ class DraftsController < ApplicationController
     @players = Player.where(:position => ['WR', 'QB', 'RB', 'K'])
     # @players.order_by([:avg, :desc])
     @team = @user.team
-    @update = { :feed => "This is a feed item", :players => @team.get_players }.to_json.html_safe #Cbs::Feed
 
     respond_to do |format|
       format.js
