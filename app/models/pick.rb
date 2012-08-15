@@ -10,13 +10,13 @@ class Pick < ActiveRecord::Base
                   :player_id
 
 
-  #after_create :link_team_id
+  def to_feed_item
+    { :round => self.round.number,
+      :pick => (self.number - 1) % self.team.league.num_teams + 1,
+      :team => self.team.abbr,
+      :player => "#{self.player.first_name[0]}. #{self.player.last_name}",
+      :pro_team => self.player.pro_team,
+      :position => self.player.position }
+  end
 
-
-
-  private
-    def link_team_id
-      team = Team.where(:league_id => self.round.draft.league, :league_team_id => self.league_team_id).first
-      self.update_attributes(:team_id => team.id)
-    end
 end
