@@ -118,6 +118,12 @@
 
 <script>
 
+// Search
+$('.search').keyup(function(){
+  $('#players-scroll').empty()
+  var search = $('.search').val()
+  $('#players-scroll').append(" <%=j render(:partial => 'search', :locals => { :search => '' , :players => @players }) %>" )
+});
 // Set at an interval of 3 seconds
 
 setInterval(function(){

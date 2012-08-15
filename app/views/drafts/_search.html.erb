@@ -1,0 +1,23 @@
+<table class='table table-striped'>
+  <tbody>
+    <% unless search == '' %>
+      <% players.select! { |p| p.full_name.include? search } %>
+      <% players.each do |s| %>
+      <tr>
+        <td>
+          <span class="label important"><%= s.position %></span>
+        </td>
+        <td>
+           <%= s.first_name %>
+        </td>
+        <td>
+           <%= s.last_name %>
+        </td>
+        <td>
+           <%= s.pro_team %>
+        </td>
+      </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
