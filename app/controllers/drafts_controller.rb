@@ -10,7 +10,7 @@ class DraftsController < ApplicationController
       @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => 'b2c7c77e1b22e0f4' } )
     end
 
-    @access = params[:access_token]
+    # @access = params[:access_token]
     # @picks = Pick.all(:number)
     @user = User.new(@mega_hash)
     @user.save
@@ -27,14 +27,14 @@ class DraftsController < ApplicationController
   def update
     # Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.draft.first.id)
     # Cbs::Players.update
-    @user = User.find_by_cbs_id(params[:user_id])
+    @user = User.find_by_cbs_id(params[:cbs_id])
     Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first.id)
     # Cbs::Players.update
     # For Players Partial
     @players = Player.where(:position => ['WR', 'QB', 'RB', 'K'])
     # @players.order_by([:avg, :desc])
     @team = @user.team
-    @feed = { 'feed' => "This is a feed item"}.to_json.html_safe #Cbs::Feed
+    @update = { :feed => "This is a feed item", :players => @team.get_players }.to_json.html_safe #Cbs::Feed
 
     respond_to do |format|
       format.js

@@ -22,6 +22,14 @@ class Team < ActiveRecord::Base
 
   after_create :link_to_user
 
+  def get_players
+    player_spot = []
+    self.slots.order(:created_at).each do |s|
+      player_spot << {:status => s.player ? s.player.full_name : '--',
+                      :position => s.eligible_positions} 
+    end
+  end
+
   private
 
   def link_to_user

@@ -121,7 +121,9 @@
 // Search
 $('.search').keyup(function(){
   $('#players-scroll').empty()
+
   var search = $('.search').val()
+
   $('#players-scroll').append(" <%=j render(:partial => 'search', :locals => { :search => '' , :players => @players }) %>" )
 });
 // Set at an interval of 3 seconds
@@ -129,8 +131,8 @@ $('.search').keyup(function(){
 setInterval(function(){
   $.ajax({
     type:"PUT",
-    dataType: 'json',
-    url: '<%= "#{@url}?user_id=#{@user.cbs_id}" %>',
+    dataType: 'script',
+    url: '<%= "#{@url}?access_token=#{@access}&cbs_id=#{@user.cbs_id}" %>',
     complete: function () {
       console.log('complete');
     },
@@ -139,23 +141,11 @@ setInterval(function(){
       console.log(textStatus);
       console.log(errorThrown);
     },
-    success: updateDraft
+    success: function(data) {
+      // var parsed_data = JSON.parse(data)
+      // return parsed_data.js
+}
   })
 }, 3000);
 
-var updateDraft = function(data) {
-  console.log(data);
-
-  // Update Feed
-  $('#feed-scroll').append('<p>' + data.feed + '</p>');
-
-  // Update Roster 
-  $('#roster').empty()
-  $('#roster').append(' <%=j render :partial => "roster" %>' )
-
-  // Update Players
-  $('#players-scroll').empty()
-  $('#players-scroll').append(' <%=j render :partial => "player" %>' )
-
-}
 </script>
