@@ -25,9 +25,14 @@ class DraftsController < ApplicationController
   end
 
   def update
-    # @feed = CBS::Draft.update_things
-    @feed = { 'feed' => "This is a feed item" }.to_json.html_safe
-    audit @feed.inspect
+    # Cbs::Players.update
+    @user = User.find_by_cbs_id(params[:user_id])
+    # For Players Partial
+    @players = Player.where(:position => ['WR', 'QB', 'RB', 'K'])
+
+    @team = @user.team
+    @feed = { 'feed' => "This is a feed item" }.to_json.html_safe #Cbs::Feed
+    
     respond_to do |format|
       format.js
     end

@@ -4,7 +4,8 @@
 <div class='container-fluid'>
   <div class='row-fluid'>
 
-<!--********** The Left Panel ********** -->
+<!--********** The Left Panel / Players ********** -->
+
   <div class='span8'>
       <div class='panel'>
       <div class='well' id='left-panel'>
@@ -46,7 +47,7 @@
 
 <!--********** The Roster Box *********** -->
 
-        <div class='well'>
+        <div id='roster' class='well'>
           <table class='table table-striped'>
             <h3>Your Roster:</h3>
             <tbody>
@@ -55,7 +56,7 @@
               <td>
               <span class="label important"><%= s.eligible_positions %></span>
               </td>
-              <td> --
+              <td> <%= s.player ? s.player.full_name : '--' %>
               </td>
             </tr>
             <% end %>
@@ -105,13 +106,18 @@
 <p><%= @pick.inspect %></p>
 
 <%= @mega_hash %>
+
+<!-- This is our ajax calls -->
+
 <script>
-setInterval(
-  function(){
+
+// Set at an interval of 3 seconds
+
+setInterval(function(){
   $.ajax({
     type:"PUT",
     dataType: 'json',
-    url: "<%= @url %>",
+    url: '<%= "#{@url}?user_id=#{@user.cbs_id}" %>',
     complete: function () {
       console.log('complete');
     },
@@ -120,15 +126,23 @@ setInterval(
       console.log(textStatus);
       console.log(errorThrown);
     },
-    success: function(data) {
-  console.log(data);
-  $('#feed-scroll').append('<p>' + data.feed + '</p>');
-}
-  })}
-  , 3000);
+    success: updateDraft
+  })
+}, 3000);
 
-// var updateDraft = function(data) {
-//   console.log(data);
-//   $('#feed-scroll').append('<p>'+ data.feed'</p>');
-// }
+var updateDraft = function(data) {
+  console.log(data);
+
+  // Update Feed
+  $('#feed-scroll').append('<p>' + data.feed + '</p>');
+
+  // Update Roster 
+  $('#roster').empty()
+  $('#roster').append(' <%=j render :partial => "roster" %>' )
+
+  // Update Players
+  $('#players-scroll').empty()
+  $('#players-scroll').append(' <%=j render :partial => "player" %>' )
+
+}
 </script>

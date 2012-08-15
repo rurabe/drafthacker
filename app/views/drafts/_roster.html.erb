@@ -1,0 +1,14 @@
+          <table id='roster' class='table table-striped'>
+            <h3>Your Roster:</h3>
+            <tbody>
+            <% @team.slots.order(:created_at).each do |s| %>
+            <tr>
+              <td>
+              <span class="label important"><%= s.eligible_positions %></span>
+              </td>
+              <td> <%= s.player ? s.player.full_name : '--' %>
+              </td>
+            </tr>
+            <% end %>
+          </tbody>
+          </table>
