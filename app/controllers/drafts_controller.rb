@@ -28,7 +28,7 @@ class DraftsController < ApplicationController
     # Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.draft.first.id)
     # Cbs::Players.update
     @user = User.find_by_cbs_id(params[:user_id])
-    # Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first.id)
+    Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first.id)
     # Cbs::Players.update
     # For Players Partial
     @players = Player.where(:position => ['WR', 'QB', 'RB', 'K'])
