@@ -38,7 +38,7 @@ class Player < ActiveRecord::Base
     Player.where(:id => drafted_player_ids)
   end
 
-  def self.undrafted(options = {})
+  def self.undrafted(options = {}) #eg. {:draft_id => 3}
     Player.all - drafted(options)
   end
 
