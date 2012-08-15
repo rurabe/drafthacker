@@ -21,9 +21,17 @@ class DraftsController < ApplicationController
     @round = @draft.rounds.first
     @pick = @round.picks.first
     @players = Player.where(:position => ['WR', 'QB', 'RB', 'K'])
+    @url = draft_url(@draft)
   end
 
-  def index
+  def update
+    # @feed = CBS::Draft.update_things
+    @feed = { 'feed' => "This is a feed item" }.to_json.html_safe
+    audit @feed.inspect
+    respond_to do |format|
+      format.js
+    end
+
   end
 
 end

@@ -14,10 +14,3 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require_tree .
-
-// setInterval($.get('http://api.cbssports.com/fantasy/league/draft/results?<%=j @access%>&response_format=JSON', function(data){
-//       $('#status').append('<p>Appended somethin</p>')};
-//       alert('holler back youngin');
-//     }), 3000);
-
-//setInterval(function() {$('#feed').append("<%=j 'jh' %>")}, 3000);

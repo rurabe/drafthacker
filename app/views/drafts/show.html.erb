@@ -1,10 +1,4 @@
 
-
-<div class='hero-unit'>
-  <h1 align="center"><%= @user.team.name %></h1>
-  <h2 align="right"><%= @user.cbs_id %><h2>
-</div>
-
 <!--********** Everything but the header ********** -->
 
 <div class='container-fluid'>
@@ -86,6 +80,8 @@
   </div>
 </div>
 
+<%= root_url %>
+
 
 // <script src="http://code.jquery.com/jquery-latest.js">
 
@@ -122,4 +118,30 @@
 <p><%= @pick.inspect %></p>
 
 <%= @mega_hash %>
+<script>
+setInterval(
+  function(){
+  $.ajax({
+    type:"PUT",
+    dataType: 'json',
+    url: "<%= @url %>",
+    complete: function () {
+      console.log('complete');
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      console.log(jqXHR.responseText);
+      console.log(textStatus);
+      console.log(errorThrown);
+    },
+    success: function(data) {
+  console.log(data);
+  $('#feed-scroll').append('<p>' + data.feed + '</p>');
+}
+  })}
+  , 3000);
 
+// var updateDraft = function(data) {
+//   console.log(data);
+//   $('#feed-scroll').append('<p>'+ data.feed'</p>');
+// }
+</script>

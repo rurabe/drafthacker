@@ -19,11 +19,13 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
-          <a class="brand" href="#">Drafthacker</a>
+          <a class="brand" href="#">Drafthacker:</a>
           <div class="container-fluid">
+            <ul class="nav pull-right">
+              <li><a href="#"><%= @user.team.owners.first.name %></a></li>
+            </ul>
             <ul class="nav">
-              <li><%=link_to @user.team.name %></li>
-              <li><%=link_to @user.team.owners.first.name %></li>
+              <li><a href="#"><%= @user.team.name %></a></li>
             </ul>
           </div>
         </div>
