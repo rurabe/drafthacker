@@ -17,20 +17,29 @@ class Draft < ActiveRecord::Base
 
   after_create :link_teams_to_picks
 
+  def build_feed 
+    this_draft = Draft.where(:id => self).includes(:picks,:teams,:rounds,:league).first
+    feed = []
+    this_draft.picks.each do |pick|
+      feed << pick.to_feed_item
+    end
+    feed
+  end
+
   private
 
     def link_teams_to_picks
       this_draft = Draft.where(:id => self).includes(:picks,:teams).first
 
-        this_draft.teams.each do |team|
-          team_picks = this_draft.picks.where(:league_team_id => team.league_team_id)
+      this_draft.teams.each do |team|
+        team_picks = this_draft.picks.where(:league_team_id => team.league_team_id)
 
-          team_picks.each do |pick| 
-            pick.team = team
-            pick.draft = self
-          end
+        team_picks.each do |pick| 
+          pick.team = team
+          pick.draft = self
+          pick.save
         end
-      self.save
+      end
     end
 
   end

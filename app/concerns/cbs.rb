@@ -84,6 +84,7 @@ module Cbs
       update_or_create(build_auction_values,false)
     end
 
+    
 
     private
       def self.update_or_create(players,needs_cleaning=true)
