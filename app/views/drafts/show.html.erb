@@ -78,17 +78,6 @@
 <%= root_url %>
 
 
-// <script src="http://code.jquery.com/jquery-latest.js">
-
-//     setInterval(alert('this shit ran'), 3000)
-
-//     $.get('http://api.cbssports.com/fantasy/league/draft/results?<%=@access%>&response_format=JSON', function(data){
-//       $('#status').hide;
-//       alert('this shit ran');
-//     })();
-// </script>
-
-
 <p>Your CBS ID is <%= @user.cbs_id %></p>
 
 <p>The system has assigned you a draft id of <%= @draft.id %> </p>
@@ -126,13 +115,14 @@ $('.search').keyup(function(){
 
   $('#players-scroll').append(" <%=j render(:partial => 'search', :locals => { :search => '' , :players => @players }) %>" )
 });
+
 // Set at an interval of 3 seconds
 
 setInterval(function(){
   $.ajax({
     type:"PUT",
     dataType: 'script',
-    url: '<%= "#{@url}?access_token=#{@access}&cbs_id=#{@user.cbs_id}" %>',
+    url: '<%= "#{@url}?access_token=#{@access}&user_id=#{@user.id}" %>',
     complete: function () {
       console.log('complete');
     },
@@ -141,9 +131,8 @@ setInterval(function(){
       console.log(textStatus);
       console.log(errorThrown);
     },
-    success: function(data) { 
+    success: function(data) {
       console.log("Success");
-
     }
         })
 }, 3000);

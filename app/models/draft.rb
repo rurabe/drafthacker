@@ -6,21 +6,21 @@ class Draft < ActiveRecord::Base
   has_many :picks, :through => :rounds
 
 
-  attr_accessible :name, 
-  								:start_time, 
-  								:league_attributes, 
-  								:rounds_attributes
-  								
-  accepts_nested_attributes_for :league, 
-  															:rounds
+  attr_accessible :name,
+                  :start_time,
+                  :league_attributes,
+                  :rounds_attributes
+
+  accepts_nested_attributes_for :league,
+                                :rounds
 
 
   after_create :link_picks
 
-  def build_feed 
+  def build_feed
     this_draft = Draft.where(:id => self).includes(:picks,:teams,:rounds,:league).first
     feed = []
-    this_draft.picks.each do |pick|
+    self.picks.where('picks.player_id IS NOT NULL').order('picks.number DESC').each do |pick|
       feed << pick.to_feed_item
     end
     feed
@@ -28,12 +28,12 @@ class Draft < ActiveRecord::Base
 
   def drafted_players
     # Select all players with ids that have been drafted, sorted by pick order
-    Player.where(:id => drafted_ids).includes(:picks).order('picks.number')
+    Player.where(:id => drafted_ids, :position => self.teams.first.slots.pluck(:eligible_positions).uniq ).includes(:picks).order('picks.number')
   end
 
   def undrafted_players
     # Select all players with ids that have not been drafted, sorted by ADP
-    Player.where(:id => undrafted_ids).order(:avg)
+    Player.where(:id => undrafted_ids, :position => self.teams.first.slots.pluck(:eligible_positions).uniq ).order(:avg)
   end
 
   private
