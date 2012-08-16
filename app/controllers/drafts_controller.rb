@@ -3,7 +3,7 @@ class DraftsController < ApplicationController
   def show
 
       @access = params['access_token']
-      @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => params['user_id'] } 
+      @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => params['user_id'] } )
 
     # @access = params[:access_token]
     # @picks = Pick.all(:number)
