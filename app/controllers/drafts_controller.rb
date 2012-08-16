@@ -2,13 +2,8 @@ class DraftsController < ApplicationController
 
   def show
 
-    if params['access_token']
       @access = params['access_token']
-      @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => params['user_id'] } )
-    else
-      @access = 'U2FsdGVkX18ymiCGQKbnKF1wRkPuYjQFFlLLm06kT916deFHYTeUG3fit5FtQZdxLF1s3NTIt_thZLfGsFbbSUHmjoHw_V86VExqf_vnbDfcrasSQuuEZaAq9vNRPaDf'
-      @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => 'b2c7c77e1b22e0f4' } )
-    end
+      @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => params['user_id'] } 
 
     # @access = params[:access_token]
     # @picks = Pick.all(:number)
