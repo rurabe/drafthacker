@@ -26,20 +26,22 @@ class DraftsController < ApplicationController
 
   def update
     @user = User.find(params[:user_id])
-
-    Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first.id)
-
-    @players_drafted = players_ids(@user)# For Players Partial
-
-    @team = @user.team
     warn "*"*100
-    @team.slots.order(:created_at).each do |s|
-      warn s.inspect
+    warn Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first.id)
+
+    unless Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first.id)
+
+      @players_drafted = players_ids(@user)# For Players Partial
+
+      @team = @user.team
+      warn "*"*100
+      @team.slots.order(:created_at).each do |s|
+        warn s.inspect
+      end
+      @feed = @user.drafts.first.build_feed
     end
 
-
     # For Feed
-    @feed = @user.drafts.first.build_feed
     respond_to do |format|
       format.js
     end

@@ -1,29 +1,30 @@
 //console.log("Inserting new HTML");
+<% unless Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first.id) %>
+	$('#roster').empty();
+	$('#roster').append(' <%=j render :partial => "roster" %>');
 
-$('#roster').empty();
-$('#roster').append(' <%=j render :partial => "roster" %>');
-
-// ********************* Search Bar Logic ***********************************************
-var searchIndex = {};
-$('#players-scroll tr').each(function(index, tr){
-  $.each(['.label', '.player-first-name', '.player-last-name', '.player-team-name'], function(i, selector){
-    var searchText = $.trim($(tr).find(selector).text());
-    searchIndex[searchText] || (searchIndex[searchText] = []);
-    searchIndex[searchText].push(tr);
-  });
-});
-
-
-
-//***************************************************************************************
+	// ********************* Search Bar Logic ***********************************************
+	var searchIndex = {};
+	$('#players-scroll tr').each(function(index, tr){
+	  $.each(['.label', '.player-first-name', '.player-last-name', '.player-team-name'], function(i, selector){
+	    var searchText = $.trim($(tr).find(selector).text());
+	    searchIndex[searchText] || (searchIndex[searchText] = []);
+	    searchIndex[searchText].push(tr);
+	  });
+	});
 
 
-$('#feed-scroll').empty()
-$('#feed-scroll').prepend('<% @feed.each do |f| %> <p> <span class="feed_team"><%= f[:team] %></span><%= "  picked #{f[:player]} #{f[:position]} #{f[:pro_team]}" %></p> <%end%>');
+
+	//***************************************************************************************
 
 
-<% @players_drafted.each do |id| %>
-	$('#<%= id %>').css('opacity', '0.4')
+	$('#feed-scroll').empty()
+	$('#feed-scroll').prepend('<% @feed.each do |f| %> <p> <span class="feed_team"><%= f[:team] %></span><%= "  picked #{f[:player]} #{f[:position]} #{f[:pro_team]}" %></p> <%end%>');
+
+
+	<% @players_drafted.each do |id| %>
+		$('#<%= id %>').css('opacity', '0.4')
+	<% end %>
 <% end %>
 
 //console.log("Finished inserting HTML");
