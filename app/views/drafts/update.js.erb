@@ -1,0 +1,14 @@
+console.log("Inserting new HTML");
+
+$('#roster').empty();
+$('#roster').append(' <%=j render :partial => "roster" %>');
+
+$('#feed-scroll').empty()
+$('#feed-scroll').prepend('<% @feed.each do |f| %> <p> <span class="feed_team"><%= f[:team] %></span><%= "  picked #{f[:player]} #{f[:position]} #{f[:pro_team]}" %></p> <%end%>');
+
+
+
+<% @players_drafted.each do |id| %>
+	$('#<%= id %>').css('opacity', '0.4')
+<% end %>
+console.log("Finished inserting HTML");

@@ -22,6 +22,7 @@ class Team < ActiveRecord::Base
 
   after_create :link_to_user
 
+
   private
 
   def link_to_user

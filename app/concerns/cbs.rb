@@ -44,14 +44,16 @@ module Cbs
       status[:picks].each do |pick|
         system_pick = Pick.where(:draft_id => draft_id , :number => pick[:overall_pick]).first
         system_pick.update_attributes(:player_id => pick[:player][:id])
-        
+
         #links picks to slots. needs refactoring and more testing
         slots = system_pick.team.slots.where(:eligible_positions => pick[:player][:position], :player_id => nil)
-        if !slots.empty?
-          slots.first.update_attributes(:player_id => pick[:player][:id])
-        else
-          slot = system_pick.team.slots.where(:eligible_positions => "RS", :player_id => nil).first
-          slot.update_attributes(:player_id => pick[:player][:id]) if slot
+        if !system_pick.team.slots.pluck(:player_id).include?(pick[:player][:id].to_i)
+          if !slots.empty?
+            slots.first.update_attributes(:player_id => pick[:player][:id])
+          else
+            slot = system_pick.team.slots.where(:eligible_positions => "RS", :player_id => nil).first
+            slot.update_attributes(:player_id => pick[:player][:id]) if slot
+          end
         end
       end
     end
@@ -66,7 +68,7 @@ module Cbs
       populate_auction_values
     end
 
-    # Populates the db with all players or updates them if they already exist. Approximately 2827 total. 
+    # Populates the db with all players or updates them if they already exist. Approximately 2827 total.
     def self.populate
       players = json_response( { :api_call => 'players/list', :params => { :SPORT => "football" } } )[:body][:players]
       update_or_create(players)
@@ -84,7 +86,7 @@ module Cbs
       update_or_create(build_auction_values,false)
     end
 
-    
+
 
     private
       def self.update_or_create(players,needs_cleaning=true)
@@ -115,7 +117,7 @@ module Cbs
       end
 
       def self.build_auction_values
-        # The various types of auction values available to us. 
+        # The various types of auction values available to us.
         sources = ['cbs','cbs_ppr','dave_richard','dave_richard_ppr','jamey_eisenberg','jamey_eisenberg_ppr','nathan_zegura']
         # An empty array for the results
         auction_values = []

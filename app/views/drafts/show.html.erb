@@ -1,33 +1,35 @@
 
-
-<div class='hero-unit'>
-  <h1 align="center"><%= @user.team.name %></h1>
-  <h2 align="right"><%= @user.cbs_id %><h2>
-</div>
-
 <!--********** Everything but the header ********** -->
 
 <div class='container-fluid'>
   <div class='row-fluid'>
 
-<!--********** The Left Panel ********** -->
+<!--********** The Left Panel / Players ********** -->
+
   <div class='span8'>
-      <div class='panel'>
+    <div class='panel'>
       <div class='well' id='left-panel'>
-        <h3 class='rounded-corners'>All Players:</h3>
+        <form class="well form-search">
+          <h3>Players:
+          <input type="text" class="search">
+            <button type="submit" class="btn">Search</button>
+        </form></h3>
         <div id='players-scroll'>
           <table class='table table-striped'>
             <tbody>
               <% @players.each do |s| %>
-              <tr>
+              <tr data-name="<%= s.full_name %>" id="<%= s.id %>">
                 <td>
                   <span class="label important"><%= s.position %></span>
                 </td>
-                <td>
+                <td >
                    <%= s.first_name %>
                 </td>
                 <td>
                    <%= s.last_name %>
+                </td>
+                <td>
+                   <%= s.pro_team %>
                 </td>
               </tr>
               <% end %>
@@ -52,7 +54,7 @@
 
 <!--********** The Roster Box *********** -->
 
-        <div class='well'>
+        <div id='roster' class='well'>
           <table class='table table-striped'>
             <h3>Your Roster:</h3>
             <tbody>
@@ -61,7 +63,7 @@
               <td>
               <span class="label important"><%= s.eligible_positions %></span>
               </td>
-              <td> --
+              <td> <%= s.player ? s.player.full_name : '--' %>
               </td>
             </tr>
             <% end %>
@@ -73,16 +75,7 @@
   </div>
 </div>
 
-
-// <script src="http://code.jquery.com/jquery-latest.js">
-
-//     setInterval(alert('this shit ran'), 3000)
-
-//     $.get('http://api.cbssports.com/fantasy/league/draft/results?<%=@access%>&response_format=JSON', function(data){
-//       $('#status').hide;
-//       alert('this shit ran');
-//     })();
-// </script>
+<%= root_url %>
 
 
 <p>Your CBS ID is <%= @user.cbs_id %></p>
@@ -110,3 +103,38 @@
 
 <%= @mega_hash %>
 
+<!-- This is our ajax calls -->
+
+<script>
+
+// Search
+$('.search').keyup(function(){
+  $('#players-scroll').empty()
+
+  var search = $('.search').val()
+
+  $('#players-scroll').append(" <%=j render(:partial => 'search', :locals => { :search => '' , :players => @players }) %>" )
+});
+
+// Set at an interval of 3 seconds
+
+setInterval(function(){
+  $.ajax({
+    type:"PUT",
+    dataType: 'script',
+    url: '<%= "#{@url}?access_token=#{@access}&user_id=#{@user.id}" %>',
+    complete: function () {
+      console.log('complete');
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      console.log(jqXHR.responseText);
+      console.log(textStatus);
+      console.log(errorThrown);
+    },
+    success: function(data) {
+      console.log("Success");
+    }
+        })
+}, 3000);
+
+</script>
