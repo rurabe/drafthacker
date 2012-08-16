@@ -36,6 +36,14 @@ class Draft < ActiveRecord::Base
     Player.where(:id => undrafted_ids, :position => self.teams.first.slots.pluck(:eligible_positions).uniq ).order(:avg)
   end
 
+  def best_ten
+    next_pick = self.user.team.picks.where(:player_id => nil).order(:number).limit(1).first
+    undrafted_players.limit(10).inject({}) do |hash,player|
+      hash[player.full_name.to_sym] = player.chance(next_pick.number)
+      hash
+    end
+  end
+
   private
 
     def link_picks

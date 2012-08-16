@@ -1,0 +1,8 @@
+def availability(options={}) #options = {:high => 1, :low => 5, :avg => 3.2, :pick => 4}
+  mu = options.fetch(:avg).to_f
+  sigma = (options.fetch(:low).to_f - options.fetch(:high).to_f) / 3.96
+
+  z = (options.fetch(:pick).to_f - mu) / sigma
+
+  p = (1 - Distribution::Normal.cdf(z)).round(3)
+end
