@@ -9,26 +9,31 @@
   <div class='span8'>
     <div class='panel'>
       <div class='well' id='left-panel'>
+
+
+        <!--****************** Search Bar ***************-->
         <form class="well form-search">
           <h3>Players:
-          <input type="text" class="search">
-            <button type="submit" class="btn">Search</button>
+          <input type="text" class="search-term" placeholder='Search...'>
         </form></h3>
+        
+        <!--****************** Player Table *************-->
+
         <div id='players-scroll'>
           <table class='table table-striped'>
             <tbody>
               <% @players.each do |s| %>
-              <tr data-name="<%= s.full_name %>" id="<%= s.id %>">
+              <tr class="data-name" id="<%= s.id %>">
                 <td>
                   <span class="label important"><%= s.position %></span>
                 </td>
-                <td >
+                <td class='player-first-name'>
                    <%= s.first_name %>
                 </td>
-                <td>
+                <td class='player-last-name'>
                    <%= s.last_name %>
                 </td>
-                <td>
+                <td class='player-team-name'>
                    <%= s.pro_team %>
                 </td>
               </tr>
@@ -108,13 +113,22 @@
 <script>
 
 // Search
-$('.search').keyup(function(){
-  $('#players-scroll').empty()
-
-  var search = $('.search').val()
-
-  $('#players-scroll').append(" <%=j render(:partial => 'search', :locals => { :search => '' , :players => @players }) %>" )
-});
+$('.search-term')
+  .keyup(function(event){
+    if (event){
+      var searchTerm = $('.search-term').val();
+      $('#players-scroll tr').hide();
+      if(searchTerm === ""){
+        $('#players-scroll tr').show();
+        event.preventDefault();
+      }
+      else{
+        $(searchIndex[searchTerm]).show();
+        event.preventDefault();
+      }
+    };
+    
+  });
 
 // Set at an interval of 3 seconds
 
@@ -124,17 +138,17 @@ setInterval(function(){
     dataType: 'script',
     url: '<%= "#{@url}?access_token=#{@access}&user_id=#{@user.id}" %>',
     complete: function () {
-      console.log('complete');
+      //console.log('complete');
     },
     error: function (jqXHR, textStatus, errorThrown) {
-      console.log(jqXHR.responseText);
-      console.log(textStatus);
-      console.log(errorThrown);
+      //console.log(jqXHR.responseText);
+      //console.log(textStatus);
+      //console.log(errorThrown);
     },
     success: function(data) {
-      console.log("Success");
+      //console.log("Success");
     }
-        })
+  });
 }, 3000);
 
 </script>
