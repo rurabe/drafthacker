@@ -18,11 +18,11 @@
           <table class='table table-striped'>
             <tbody>
               <% @players.each do |s| %>
-              <tr>
+              <tr data-name="<%= s.full_name %>" id="<%= s.id %>">
                 <td>
                   <span class="label important"><%= s.position %></span>
                 </td>
-                <td>
+                <td >
                    <%= s.first_name %>
                 </td>
                 <td>

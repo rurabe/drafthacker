@@ -29,8 +29,8 @@ class DraftsController < ApplicationController
 
     Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first.id)
 
-    # For Players Partial
-    @players = @user.drafts.first.undrafted_players
+    @players_drafted = players_ids(@user)# For Players Partial
+
     @team = @user.team
     warn "*"*100
     @team.slots.order(:created_at).each do |s|
@@ -44,6 +44,14 @@ class DraftsController < ApplicationController
       format.js
     end
 
+  end
+
+  def players_ids(user)
+    players_drafted = []
+    user.drafts.first.drafted_players.each do |p|
+      players_drafted << p.id
+    end
+    players_drafted
   end
 
 end
