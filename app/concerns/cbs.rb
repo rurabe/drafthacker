@@ -41,6 +41,7 @@ module Cbs
       @@status ||= {}
       status = json_response( { :api_call => 'league/draft/results', :params => { :access_token => access_token } } ) [:body][:draft_results]
       
+      # Make Sure Api is new
       if @@status != status
         @@status = status
         # Set players to picks and picks to slots 

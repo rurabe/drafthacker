@@ -21,25 +21,20 @@ class DraftsController < ApplicationController
     @pick = @round.picks.first
     @players = @draft.undrafted_players
     @url = draft_url(@draft)
+    @user_id = @user.cbs_id
     Cbs::Draft.update(:access_token => @access, :draft_id => @user.drafts.first.id)
   end
 
   def update
     @user = User.find(params[:user_id])
-    warn "*"*100
-    warn Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first.id)
 
-    unless Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first.id)
+    Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first.id)
+    # For Players Partial
+    @team = @user.team
+    @players_drafted = players(@user)
 
-      @players_drafted = players_ids(@user)# For Players Partial
-
-      @team = @user.team
-      warn "*"*100
-      @team.slots.order(:created_at).each do |s|
-        warn s.inspect
-      end
-      @feed = @user.drafts.first.build_feed
-    end
+    @feed = @user.drafts.first.build_feed
+    
 
     # For Feed
     respond_to do |format|
@@ -48,10 +43,10 @@ class DraftsController < ApplicationController
 
   end
 
-  def players_ids(user)
+  def players(user)
     players_drafted = []
     user.drafts.first.drafted_players.each do |p|
-      players_drafted << p.id
+      players_drafted << p
     end
     players_drafted
   end
