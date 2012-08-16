@@ -46,12 +46,12 @@ module Cbs
         system_pick.update_attributes(:player_id => pick[:player][:id])
 
         #links picks to slots. needs refactoring and more testing
-        slots = system_pick.team.slots.where(:eligible_positions => pick[:player][:position], :player_id => nil)
+        slots = system_pick.team.slots.where(:eligible_positions => pick[:player][:position], :player_id => nil).order(:id)
         if !system_pick.team.slots.pluck(:player_id).include?(pick[:player][:id].to_i)
           if !slots.empty?
             slots.first.update_attributes(:player_id => pick[:player][:id])
           else
-            slot = system_pick.team.slots.where(:eligible_positions => "RS", :player_id => nil).first
+            slot = system_pick.team.slots.where(:eligible_positions => "RS", :player_id => nil).order(:id).first
             slot.update_attributes(:player_id => pick[:player][:id]) if slot
           end
         end

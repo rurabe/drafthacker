@@ -22,11 +22,14 @@ class Team < ActiveRecord::Base
 
   after_create :link_to_user
 
+  def next_pick
+    self.picks.where(:player_id => nil).order(:number).limit(1).first
+  end
 
   private
 
-  def link_to_user
-    self.league.draft.user.team = self if self.logged_in_team
-  end
+    def link_to_user
+      self.league.draft.user.team = self if self.logged_in_team
+    end
 
 end

@@ -45,7 +45,7 @@ class Player < ActiveRecord::Base
       mu = self.avg.to_f
       sigma = (self.low.to_f - self.high.to_f) / 3.96
       z = (pick.to_f - mu) / sigma
-      p = (1 - Distribution::Normal.cdf(z)).round(3)
+      pick == 1 ? 1 : (1 - Distribution::Normal.cdf(z)).round(3) * 100
     end
 
 end

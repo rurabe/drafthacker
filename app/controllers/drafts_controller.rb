@@ -21,6 +21,7 @@ class DraftsController < ApplicationController
     @pick = @round.picks.first
     @players = @draft.undrafted_players
     @url = draft_url(@draft)
+    Cbs::Draft.update(:access_token => @access, :draft_id => @user.drafts.first.id)
   end
 
   def update

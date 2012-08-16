@@ -22,19 +22,19 @@
         <div id='players-scroll'>
           <table class='table table-striped'>
             <tbody>
-              <% @players.each do |s| %>
-              <tr class="data-name" id="<%= s.id %>">
+              <% @players.each do |player| %>
+              <tr class="player-row" id="<%= player.id %>" title="<%= player.full_name %>" data-content='<p>There is a <span class="label"><%= player.chance(@team.next_pick.number).round(2) %>%</span> chance that this player will still be available at pick <span class="badge"><%= @team.next_pick.number %></span> (your next pick).</p>'>
                 <td>
-                  <span class="label important"><%= s.position %></span>
+                  <span class="label important"><%= player.position %></span>
                 </td>
                 <td class='player-first-name'>
-                   <%= s.first_name %>
+                   <%= player.first_name %>
                 </td>
                 <td class='player-last-name'>
-                   <%= s.last_name %>
+                   <%= player.last_name %>
                 </td>
                 <td class='player-team-name'>
-                   <%= s.pro_team %>
+                   <span class="<%= player.pro_team.downcase %>" ><%= player.pro_team %></span>
                 </td>
               </tr>
               <% end %>
@@ -111,6 +111,11 @@
 <!-- This is our ajax calls -->
 
 <script>
+
+// Popovers
+$(document).ready(function(){
+  $('.player-row').popover();
+});
 
 // Search
 $('.search-term')

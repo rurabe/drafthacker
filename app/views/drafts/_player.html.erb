@@ -1,18 +1,21 @@
 <table class='table table-striped'>
   <tbody>
-    <% @players.each do |s| %>
-    <tr>
+    <% @players.each do |player| %>
+    <tr title="<%= player.full_name %>">
       <td>
-        <span class="label important"><%= s.position %></span>
+        <span class="label important"><%= player.position %></span>
       </td>
       <td>
-         <%= s.first_name %>
+         <%= player.first_name %>
       </td>
       <td>
-         <%= s.last_name %>
+         <%= player.last_name %>
       </td>
       <td>
-         <%= s.pro_team %>
+         <%= player.pro_team %>
+      </td>
+      <td>
+        <%= player.chance(@team.next_pick.number) %>
       </td>
     </tr>
     <% end %>

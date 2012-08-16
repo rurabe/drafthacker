@@ -1,7 +1,7 @@
 <table id='roster' class='table table-striped'>
   <h3>Your Roster:</h3>
   <tbody>
-    <% @team.slots.order(:created_at).each do |s| %>
+    <% @team.slots.order(:id).each do |s| %>
     <tr>
       <td>
       <span class="label important"><%= s.eligible_positions %></span>
