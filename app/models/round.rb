@@ -3,8 +3,9 @@ class Round < ActiveRecord::Base
   has_many    :picks
 
   attr_accessible :number,
-  								:picks_attributes
-  accepts_nested_attributes_for :picks
+                  :picks_attributes,
+                  :draft_id #
+  # accepts_nested_attributes_for :picks
 
 
 end

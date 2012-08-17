@@ -9,13 +9,14 @@ class Draft < ActiveRecord::Base
   attr_accessible :name,
                   :start_time,
                   :league_attributes,
-                  :rounds_attributes
+                  :rounds_attributes,
+                  :user_id #
 
-  accepts_nested_attributes_for :league,
-                                :rounds
+  # accepts_nested_attributes_for :league,
+  #                               :rounds
 
 
-  after_create :link_picks
+  # after_create :link_picks
 
   def build_feed
     this_draft = Draft.where(:id => self).includes(:picks,:teams,:rounds,:league).first
