@@ -9,6 +9,7 @@ gem 'jquery-rails', '~> 2.0.2'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 gem 'thin', '~> 1.4.1'
 gem 'activerecord-import'
+gem 'upsert'
 
 group :test, :development do
   gem 'simplecov', '~> 0.6.4'
