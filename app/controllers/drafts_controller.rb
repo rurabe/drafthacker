@@ -22,13 +22,13 @@ class DraftsController < ApplicationController
     @players = @draft.undrafted_players
     @url = draft_url(@draft)
     @user_id = @user.cbs_id
-    Cbs::Draft.update(:access_token => @access, :draft_id => @user.drafts.first.id)
+    Cbs::Draft.update(:access_token => @access, :draft_id => @user.drafts.first)
   end
 
   def update
     @user = User.find(params[:user_id])
 
-    Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first.id)
+    Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first)
     # For Players Partial
     @team = @user.team
     @players_drafted = players(@user)

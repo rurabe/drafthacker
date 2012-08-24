@@ -11,14 +11,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120814101351) do
+ActiveRecord::Schema.define(:version => 20120824031349) do
 
   create_table "drafts", :force => true do |t|
     t.integer  "user_id"
     t.string   "name"
     t.datetime "start_time"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.string   "last_response_sha"
+    t.integer  "last_pick"
   end
 
   add_index "drafts", ["user_id"], :name => "index_drafts_on_user_id"
