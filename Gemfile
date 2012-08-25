@@ -8,7 +8,7 @@ gem 'jquery-rails', '~> 2.0.2'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 gem 'thin', '~> 1.4.1'
-gem 'distribution'
+gem 'rubystats'
 
 group :test, :development do
   gem 'simplecov', '~> 0.6.4'

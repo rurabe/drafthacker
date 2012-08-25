@@ -31,9 +31,9 @@ class Player < ActiveRecord::Base
                   :av_jamey_eisenberg_ppr, # Auction Values
                   :av_nathan_zegura        # Auction Values
 
-  def chance(input)
+  def chance(input) # input is in the form of picks
     if input.class == Array
-      input.inject({}) { |hash,pick| hash["pick#{pick}"] = normal(pick); hash }
+      input.inject({}) { |hash,pick| hash[pick] = normal(pick); hash }
     else
       normal(input)
     end
@@ -45,7 +45,9 @@ class Player < ActiveRecord::Base
       mu = self.avg.to_f
       sigma = (self.low.to_f - self.high.to_f) / 3.96
       z = (pick.to_f - mu) / sigma
-      pick == 1 ? 1 : (1 - Distribution::Normal.cdf(z)).round(3) * 100
+      dist = Rubystats::NormalDistribution.new
+      pick == 1 ? 100 : (1 - dist.cdf(z)).round(3)
+
     end
 
 end
