@@ -2,7 +2,7 @@ class League < ActiveRecord::Base
   belongs_to :draft
   has_many :teams
 
-  accepts_nested_attributes_for :teams
+  # accepts_nested_attributes_for :teams
   attr_accessible :name,
                 #API data
                   :regular_season_periods,
@@ -29,7 +29,8 @@ class League < ActiveRecord::Base
                   :timer_end,
                   :draft_state,
                   :timestamp,
-                  :teams_attributes
+                  :teams_attributes,
+                  :draft_id #
 
 
 

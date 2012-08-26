@@ -15,10 +15,12 @@ class Team < ActiveRecord::Base
                   :owners,
                   :league_team_id, #CBS reports this as 'id'
                   :slots_attributes,
-                  :owners_attributes
+                  :owners_attributes,
+                  :league_id, #
+                  :user_id #
 
-  accepts_nested_attributes_for :slots,
-                                :owners
+  # accepts_nested_attributes_for :slots,
+  #                                :owners
 
   after_create :link_to_user
 
