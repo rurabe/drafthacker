@@ -13,7 +13,6 @@ gem 'upsert'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-
 group :test, :development do
   gem 'simplecov', '~> 0.6.4'
   gem 'rspec-rails', '~> 2.11.0'
