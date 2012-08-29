@@ -19,8 +19,6 @@ class Team < ActiveRecord::Base
                   :league_id, #
                   :user_id #
 
-  # accepts_nested_attributes_for :slots,
-  #                                :owners
 
   after_create :link_to_user
 

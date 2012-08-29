@@ -30,112 +30,6 @@ module Cbs
       end
   end
 
-  class Import
-
-    def self.batch_create_all(options = {}) # e.g. {:cbs_id => 'b2c7c77e1b22e0f4', :access_token => 'U2FsdGVkX1_tJTlHibh2CnT03MRXjw12TJ-EmAU34MV4ZhwuA4--gdKJRjpFAdTo1kKmvA7BPabgRiU2j2gcBc9zrmKmdrHrh-5kv91rUlfflCbQjw8HqL6RS3wY8Ycp' }
-      cbs_id = options.fetch(:cbs_id)
-      access_token = options.fetch(:access_token)
-
-      # API responses assigned to local variables
-      league_attributes = Cbs::League.build_hash_league_details(access_token).merge(Cbs::League.build_hash_draft_config(access_token))
-      teams_attributes = Cbs::League.build_hash_fantasy_teams(access_token)
-      slots_attributes = Cbs::League.build_slots_array(access_token)
-      rounds_attributes = Cbs::League.build_hash_draft_order(access_token)
-
-      # create user
-      user = User.create(:cbs_id => cbs_id)
-
-      # create draft
-      # drafts_attributes =
-      # draft = user.drafts.first.build
-      draft = ActiveRecord::Draft.create(:user_id => user.id)
-      # create league
-      league_attributes[:draft_id] = draft.id
-      league = ActiveRecord::League.create(league_attributes)
-
-      # build_and_import_teams_and_owners(user_id)
-      teams = []
-      teams_owners_attributes = []
-      teams_slots_attributes = []
-
-      # strips team_attributes of owners_attributes and slots_attributes
-      # instantiates new Team objects and stores them in teams array
-      teams_attributes.each do |team_attr|
-        owners = []
-        teams_owners_attributes << team_attr.delete(:owners_attributes)
-        teams_slots_attributes << team_attr.delete(:slots_attributes)
-        team_attr[:league_id] = league.id
-        # team_attr[:user_id] = user.id
-        team = Team.new(team_attr)
-        teams <<  team
-      end
-      # import teams
-      # puts teams.map{|team| team.class}
-      # == Examples
-          #  class BlogPost < ActiveRecord::Base ; end
-          #
-          #  # Example using array of model objects
-          #  posts = [ BlogPost.new :author_name=>'Zach Dennis', :title=>'AREXT',
-          #            BlogPost.new :author_name=>'Zach Dennis', :title=>'AREXT2',
-          #            BlogPost.new :author_name=>'Zach Dennis', :title=>'AREXT3' ]
-          #  BlogPost.import posts
-      t = teams_attributes.map{|team_attr| "Team.new(#{team_attr})"}
-
-      Team.import(teams, :synchronize => teams)
-
-      all_owners = []
-      all_slots = []
-      #iterate over teams to create owner and slot objects
-      teams.length.times do |i|
-        owners = []
-        slots = []
-        team = teams[i]
-        owners_attributes = teams_owners_attributes[i]
-        slots_attributes = teams_slots_attributes[i]
-
-        #build owners for team
-        owners_attributes.each do |owner_attr|
-          owner_attr[:team_id] = team.id
-          owner = Owner.new(owner_attr)
-          owners << owner
-        end
-
-        # build_slots for team
-        slots_attributes.each do |slot_attr|
-          slot_attr[:team_id] = team.id
-          slots << Slot.new(slot_attr)
-        end
-
-      end
-
-        all_owners << owners
-        all_slots << slots
-
-        # import owners and slots
-        Owner.import(all_owners.flatten!)
-        Slot.import(all_slots.flatten!)
-
-      #def build_and_import_rounds_and_picks
-      rounds = []
-      picks = []
-      rounds_attributes.each do |round_attr|
-        pick_attributes = round_attr.delete(:picks_attributes)
-        round_attr[:draft_id] = draft.id
-        round = Rounds.new(round_attr)
-        rounds << round
-        pick_attributes.each do |pick_attr|
-          pick_attr[:round_id] = round.id
-          pick_attr[:draft_id] = draft.id
-          pick = Pick.new(pick_attr)
-          picks << pick
-        end
-      end
-      Round.import(rounds)
-      Pick.import(picks)
-
-    end
-  end
-
   class Draft #--------------------------------------------------------------------------------------------------------
     extend ApiCall
 
@@ -299,7 +193,7 @@ module Cbs
       def self.build_hash_fantasy_teams(access_token)
         teams = json_response({ :api_call => 'league/teams', :params => { :access_token => access_token } })[:body][:teams]
         # Create the slot array that gets assigned to each team
-        team_slots_array = build_slots_array(access_token)
+        #team_slots_array = build_slots_array(access_token)
 
         teams.map! do |team|
           # Id is already an attribute of team
@@ -312,7 +206,8 @@ module Cbs
           team[:owners_attributes].each { |owner| owner[:cbs_hex_id] = owner.delete :id }
 
           # Each team gets an slot array built for them
-          team.merge team_slots_array
+          #team.merge team_slots_array
+          team
         end
 
         teams
