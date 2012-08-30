@@ -4,6 +4,4 @@ class User < ActiveRecord::Base
 
   attr_accessible :cbs_id
 
-  
-
 end

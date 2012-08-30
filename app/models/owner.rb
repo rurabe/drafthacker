@@ -4,5 +4,5 @@ class Owner < ActiveRecord::Base
   attr_accessible :commissioner,
                   :cbs_hex_id,
                   :name,
-                  :team_id #
+                  :team_id
 end

@@ -10,11 +10,7 @@ class Draft < ActiveRecord::Base
                   :start_time,
                   :league_attributes,
                   :rounds_attributes,
-                  :user_id #
-
-  # accepts_nested_attributes_for :league,
-  #                               :rounds
-
+                  :user_id 
 
   # after_create :link_picks
 

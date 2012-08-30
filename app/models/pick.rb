@@ -8,7 +8,8 @@ class Pick < ActiveRecord::Base
                   :team_id,          # eg 483
                   :draft_id,
                   :player_id,
-                  :round_id #
+                  :round_id,
+                  :round_number
 
 
   def to_feed_item

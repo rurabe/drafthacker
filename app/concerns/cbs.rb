@@ -231,7 +231,8 @@ module Cbs
               slots_array << { :eligible_positions => "RS" }
             end
 
-            { :slots_attributes => slots_array }
+            # { :slots_attributes => slots_array }
+            slots_array
           end
 
       # API call to http://api.cbssports.com/fantasy/league/draft/order ------------------------------

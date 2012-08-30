@@ -30,7 +30,7 @@ class League < ActiveRecord::Base
                   :draft_state,
                   :timestamp,
                   :teams_attributes,
-                  :draft_id #
+                  :draft_id
 
 
 

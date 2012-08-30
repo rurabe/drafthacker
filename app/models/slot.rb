@@ -4,6 +4,6 @@ class Slot < ActiveRecord::Base
 
   attr_accessible :eligible_positions,
                   :player_id,
-                  :team_id #
+                  :team_id
 
 end
