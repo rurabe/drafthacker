@@ -43,13 +43,6 @@ module Cbs
       # Get the JSON from the API
       status = json_response( { :api_call => 'league/draft/results', :params => { :access_token => access_token } } ) [:body][:draft_results]
 
-      # Make Sure Api is new
-      if @@status != status
-        @@status = status
-        # Set players to picks and picks to slots
-        status[:picks].each do |pick|
-          system_pick = Pick.where(:draft_id => draft_id , :number => pick[:overall_pick]).first
-      
       # Generate SHA hash from the response
       current_response_sha = Digest::SHA1.hexdigest(status.to_s)
 
