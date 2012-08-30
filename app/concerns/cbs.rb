@@ -2,6 +2,8 @@ require 'net/http'
 
 module Cbs
 
+  # This module is included in all the subsequent classes. It builds the request URL, adds the parameters, and returns 
+  # the JSON response as a hash.
   module ApiCall #--------------------------------------------------------------------------------------------------------
 
     def json_response(options = {}) #eg { :api_call => 'league/details', :params => { :access_token => "csugvwu3298hfw9" } }
@@ -33,14 +35,12 @@ module Cbs
   class Draft #--------------------------------------------------------------------------------------------------------
     extend ApiCall
 
-    # Updates Draft Results
-    def self.update( options = {} ) #eg. { :access_token => "vksdhgvkhsdbvksdiugweiufgwiusd", :draft_id => 6362 }
-      # Setting variables from the options
-      draft_id = options.fetch(:draft_id)
+    def self.update( options = {} ) #eg. { :access_token => "vksdhgvkhsdbvksdiugweiufgwiusd", :draft => #<Draft id: 142... > }
+      # Setting variables out of the options hash
+      draft = options.fetch(:draft)
       access_token = options.fetch(:access_token)
 
       # Get the JSON from the API
-      @@status ||= {}
       status = json_response( { :api_call => 'league/draft/results', :params => { :access_token => access_token } } ) [:body][:draft_results]
 
       # Make Sure Api is new
@@ -49,21 +49,48 @@ module Cbs
         # Set players to picks and picks to slots
         status[:picks].each do |pick|
           system_pick = Pick.where(:draft_id => draft_id , :number => pick[:overall_pick]).first
+      
+      # Generate SHA hash from the response
+      current_response_sha = Digest::SHA1.hexdigest(status.to_s)
+
+      # Make Sure Api is new
+      if draft.last_response_sha != current_response_sha
+
+        # Find the picks that are new by selecting only those that are greater than the last pick.
+        new_picks = status[:picks].select { |pick| pick[:overall_pick].to_i > draft.last_pick.to_i }
+
+        # TODO: Get batch inserts working in this method
+
+        # Set the newly drafted players to picks and picks to slots 
+        new_picks.each do |pick|
+          # Select the pick that corresponds to the latest pick(s)
+          system_pick = Pick.where(:draft_id => draft , :number => pick[:overall_pick]).first
+          # Link that pick to the player indicated in the response using id
           system_pick.update_attributes(:player_id => pick[:player][:id])
 
-          #links picks to slots. needs refactoring and more testing
+          # Select all empty slots that this player could fill, and order it by id so he fills the first one.
           slots = system_pick.team.slots.where(:eligible_positions => pick[:player][:position], :player_id => nil).order(:id)
-          if !system_pick.team.slots.pluck(:player_id).include?(pick[:player][:id].to_i)
-            if !slots.empty?
-              slots.first.update_attributes(:player_id => pick[:player][:id])
-            else
-              slot = system_pick.team.slots.where(:eligible_positions => "RS", :player_id => nil).order(:id).first
-              slot.update_attributes(:player_id => pick[:player][:id]) if slot
-            end
+          
+          # Check to see if there are any active slots
+          
+          # Check to see if there are any open active spots.
+          if !slots.empty?
+            # If so, link that player to the first one
+            slots.first.update_attributes(:player_id => pick[:player][:id])
+          else
+            # Otherwise, take the first RS slot
+            slot = system_pick.team.slots.where(:eligible_positions => "RS", :player_id => nil).order(:id).first
+            # And link him to that slot.
+            slot.update_attributes(:player_id => pick[:player][:id]) if slot
           end
         end
-        true
+
+        # Update the draft with the latest response, and the number of picks completed.
+        draft.update_attributes(:last_response_sha => current_response_sha, :last_pick => new_picks[-1][:overall_pick])
+        # Return the response for the players updated.
+        new_picks
       else
+        # Return false if no players have been drafted since the last check                                                                                                          
         false
       end
     end
@@ -144,7 +171,6 @@ module Cbs
         # Return the array
         auction_values
       end
-
   end
 
 

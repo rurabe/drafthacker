@@ -6,7 +6,7 @@ class DraftsController < ApplicationController
       @access = params['access_token']
       @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => params['user_id'] } )
     else
-      @access = 'U2FsdGVkX18ymiCGQKbnKF1wRkPuYjQFFlLLm06kT916deFHYTeUG3fit5FtQZdxLF1s3NTIt_thZLfGsFbbSUHmjoHw_V86VExqf_vnbDfcrasSQuuEZaAq9vNRPaDf'
+      @access = 'U2FsdGVkX184X_fHYWezDUajp7pBSCuDBGjtODZ0QJXw_FddXxQvWtYPekqmy1dPw_rJ0O-1WXxWQuOHzMRRgsYdEfr4mvEZxc4j63YN6RHVxx4k9sR3eRHj0Le3O-cz'
       @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => 'b2c7c77e1b22e0f4' } )
     end
     # @access = params[:access_token]
@@ -22,13 +22,13 @@ class DraftsController < ApplicationController
     @players = @draft.undrafted_players
     @url = draft_url(@draft)
     @user_id = @user.cbs_id
-    Cbs::Draft.update(:access_token => @access, :draft_id => @user.drafts.first.id)
+    Cbs::Draft.update(:access_token => @access, :draft => @user.drafts.first)
   end
 
   def update
     @user = User.find(params[:user_id])
 
-    Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first.id)
+    Cbs::Draft.update(:access_token => params[:access_token], :draft => @user.drafts.first)
     # For Players Partial
     @team = @user.team
     @players_drafted = players(@user)

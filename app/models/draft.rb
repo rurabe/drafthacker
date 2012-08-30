@@ -8,6 +8,8 @@ class Draft < ActiveRecord::Base
 
   attr_accessible :name,
                   :start_time,
+                  :last_response_sha,
+                  :last_pick,
                   :league_attributes,
                   :rounds_attributes,
                   :user_id 

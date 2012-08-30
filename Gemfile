@@ -7,11 +7,13 @@ gem 'thin', '~> 1.4.1'
 gem 'distribution'
 gem 'activerecord-import'
 gem 'upsert'
+gem 'rubystats'
 
 # gem 'devise', '~> 2.1.2'
 #gem 'json', '~> 1.7.4'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
+
 
 group :test, :development do
   gem 'simplecov', '~> 0.6.4'

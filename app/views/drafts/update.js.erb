@@ -1,5 +1,5 @@
 //console.log("Inserting new HTML");
-<% unless Cbs::Draft.update(:access_token => params[:access_token], :draft_id => @user.drafts.first.id) %>
+<% unless Cbs::Draft.update(:access_token => params[:access_token], :draft => @user.drafts.first) %>
 	$('#roster').empty();
 	$('#roster').append(' <%=j render :partial => "roster" %>');
 
