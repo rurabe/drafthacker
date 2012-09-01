@@ -46,7 +46,7 @@ class Player < ActiveRecord::Base
       sigma = (self.low.to_f - self.high.to_f) / 3.96
       z = (pick.to_f - mu) / sigma
       dist = Rubystats::NormalDistribution.new
-      pick == 1 ? 100 : (1 - dist.cdf(z)).round(3) * 100
+      pick == 1 ? 100 : ((1 - dist.cdf(z)) * 100).round(1)
 
     end
 

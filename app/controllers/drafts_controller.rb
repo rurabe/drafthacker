@@ -6,7 +6,7 @@ class DraftsController < ApplicationController
       @access = params['access_token']
       @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => params['user_id'] } )
     else
-      @access = 'U2FsdGVkX184X_fHYWezDUajp7pBSCuDBGjtODZ0QJXw_FddXxQvWtYPekqmy1dPw_rJ0O-1WXxWQuOHzMRRgsYdEfr4mvEZxc4j63YN6RHVxx4k9sR3eRHj0Le3O-cz'
+      @access = 'U2FsdGVkX1-ujJ6DC9SBDxtKSd_FP0UTTVa2cOz0isM0pL08oRWdqs6GiY0NxHWiIhhtnO2H4TE5dtF1tYktibTijl2VIz2wQTlizKPNxLnqkaywc1SO3yZqpQc_ehNX'
       @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => 'b2c7c77e1b22e0f4' } )
     end
     # @access = params[:access_token]
@@ -22,7 +22,7 @@ class DraftsController < ApplicationController
     @players = @draft.undrafted_players
     @url = draft_url(@draft)
     @user_id = @user.cbs_id
-    Cbs::Draft.update(:access_token => @access, :draft => @user.drafts.first)
+   
   end
 
   def update

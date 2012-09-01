@@ -1,11 +1,9 @@
 Drafthacker::Application.routes.draw do
 
 
-
   resources :static_pages, :only => :index
   resources :drafts, :only => [:show, :update]
-  resources :team, :only => [:new, :create, :edit, :update, :show , :index]
-  resources :player, :only => [:show, :index]
+  resources :players, :only => :show
 
   root :to => "drafts#show"
 

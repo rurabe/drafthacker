@@ -23,7 +23,7 @@
           <a class="brand" href="#">DraftHacker</a>
           <div class="container-fluid">
             <ul class="nav pull-right">
-              <li><a href="#"><%= @user.team.owners.first.name %></a></li>
+              <li><a href="#"><%= @user.team.owners.first.name if @user %></a></li>
             </ul>
             <ul class="nav">
             </ul>

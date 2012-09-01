@@ -24,22 +24,20 @@
           <table class='table table-striped'>
             <tbody>
               <% @players.each do |player| %>
-              <div id="<%= player.id %>_modal">
-              <tr class="player-row" id="<%= player.id %>" title="<%= player.full_name %>" data-content='<p>There is a <span class="label"><%= player.chance(@team.next_pick.number).round(2) %>%</span> chance that this player will still be available at pick <span class="badge"><%= @team.next_pick.number %></span> (your next pick).</p>'>
-              </div>
-                <td>
-                  <span class="label important"><%= player.position %></span>
-                </td>
-                <td class='player-first-name'>
-                   <%= player.first_name %>
-                </td>
-                <td class='player-last-name'>
-                   <%= player.last_name %>
-                </td>
-                <td class='player-team-name'>
-                   <span class="<%= player.pro_team.downcase %>" ><%= player.pro_team %></span>
-                </td>
-              </tr>
+                <tr class="ajaxPlayerRow" id="<%= player.id %>" title="<%= player.full_name %>" data-load="/players/<%= player.id %>?user=<%= @user.id %>">
+                  <td>
+                    <span class="label important"><%= player.position %></span>
+                  </td>
+                  <td class='player-first-name'>
+                     <%= player.first_name %>
+                  </td>
+                  <td class='player-last-name'>
+                     <%= player.last_name %>
+                  </td>
+                  <td class='player-team-name'>
+                     <span class="<%= player.pro_team.downcase %>" ><%= player.pro_team %></span>
+                  </td>
+                </tr>
               <% end %>
             </tbody>
           </table>
@@ -117,10 +115,44 @@
 
 // Popovers
 
+    //todo - make the info fade in on successful ajax
+    
+    $('.ajaxPlayerRow').click(function(){
+      // set el to the player row
+      var el = $(this);
+      // the css is more interesting and lives in the draft css.
+      var loadingDiv = '<div class="loading"></div>'
+      console.log('popover got clicked');
+      // defines the (loading) popover object and calls it with 'show'
+      el.popover({content: loadingDiv,
+                  trigger: 'manual',
+                  html: true}).popover('show');
+      var playerPopover = $('.popover').last();
+      // provides the method to close popovers by clicking on them
+      playerPopover.click(function(){
+        $(this).remove();
+        console.log('popover got shut');
+      });
+      // ajax call to get the player data
+      $.get(el.attr('data-load'), function(data){
+        var popoverWindow = playerPopover.children('.popover-inner')
+                              .children('.popover-content')
+                              .children('p')
+                              .first();
+        // setTimeout for testing in development
+        // setTimeout(function(){
+          popoverWindow.empty();
+          popoverWindow.append(data).fadeIn();
+        // },1000)
+      });
+    });
+
+
+
 
 // Search
 $('.search-term')
-  .keyup(function(event){
+  .keydown(function(event){
     if (event){
       var searchTerm = $('.search-term').val();
       $('#players-scroll tr').hide();
