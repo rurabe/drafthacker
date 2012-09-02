@@ -2,16 +2,14 @@ module UpdatesAndInserts
 
   def self.upsert( activerecord_model, array_of_hashes, *index_columns )
       if array_of_hashes.class == Array
+        binding.pry
         Upsert.batch( activerecord_model.connection, activerecord_model.table_name ) do |upsert|
           array_of_hashes.each do |hash|
             index_hash = {}            
             index_columns.each { |index_column| index_hash[index_column] = hash.delete(index_column) }      
-            upsert.row( index_hash, hash ) # This syntax is fine.  
-            # binding.pry
-                      
+            upsert.row( index_hash, hash ) # This syntax is fine.                        
           end          
         end
-        # binding.pry
         
       else
         # :error => "you must provide an array of attribute hashes"
@@ -69,12 +67,13 @@ module UpdatesAndInserts
           # Clean the hash for reserved words and to match our schema
           clean_player_hash(player) if needs_cleaning
         end
-        UpdatesAndInserts.upsert( Player, players, :cbs_id)
+        UpdatesAndInserts.upsert( Player, players, :id)
       end
 
       def self.clean_player_hash(hash)
         # Certain keys from the CBS JSON response need to be reassigned for reserved words, conflicts, etc.
-        hash[:cbs_id]     = hash.delete :id # might need to turn this into an integer
+        # hash[:id]         = hash[:id]
+        hash[:cbs_id]     = hash[:id] # might need to turn this into an integer
         hash[:first_name] = hash.delete :firstname  if hash[:firstname]
         hash[:last_name]  = hash.delete :lastname   if hash[:lastname]
         hash[:full_name]  = hash.delete :fullname   if hash[:fullname]
@@ -109,7 +108,7 @@ module UpdatesAndInserts
   end
   
   class UsersAndDrafts
-    
+    extend ApiCall
     # params is a set of params with symbolized_keys! for use in development # Updated 8/31/2012
     # params = {"access_token"=>"U2FsdGVkX19BZczZgzxwaKawHs15NSSb9bbJKqElEwMTh1CrTcqVjFDhmGaZkpv7GUfzPjMhP6DkFPRgAzko16iKOpk4KlDQb12EgfuDBzHGRvvMePudLxMnMJtJ2E8O", "user_id"=>"b2c7c77e1b22e0f4", "SPORT"=>"football", "league_id"=>"3531-h2h", "controller"=>"drafts", "action"=>"show"}.symbolize_keys!
     # Cbs::League.build_hash_league_details("U2FsdGVkX19BZczZgzxwaKawHs15NSSb9bbJKqElEwMTh1CrTcqVjFDhmGaZkpv7GUfzPjMhP6DkFPRgAzko16iKOpk4KlDQb12EgfuDBzHGRvvMePudLxMnMJtJ2E8O").merge(Cbs::League.build_hash_draft_config("U2FsdGVkX19BZczZgzxwaKawHs15NSSb9bbJKqElEwMTh1CrTcqVjFDhmGaZkpv7GUfzPjMhP6DkFPRgAzko16iKOpk4KlDQb12EgfuDBzHGRvvMePudLxMnMJtJ2E8O"))
@@ -225,6 +224,78 @@ module UpdatesAndInserts
         picks
       end
       UpdatesAndInserts.upsert( Pick, picks_attributes.flatten!, :draft_id, :round_id, :number ) # picks_attributes needs to be an array of hashes not arrays, thus the flattening
+    
+    end
+  
+
+    def self.update_draft( options = {} ) #eg. { :access_token => "vksdhgvkhsdbvksdiugweiufgwiusd", :draft => #<Draft id: 142... > }
+      # Setting variables out of the options hash
+      draft = options.fetch(:draft)
+      access_token = options.fetch(:access_token)
+
+      # Get the JSON from the API
+      status = json_response( { :api_call => 'league/draft/results', :params => { :access_token => access_token } } ) [:body][:draft_results]
+
+      # Generate SHA hash from the response
+      current_response_sha = Digest::SHA1.hexdigest(status.to_s)
+
+      # Make Sure Api is new
+      if draft.last_response_sha != current_response_sha
+
+        # Find the picks that are new by selecting only those that are greater than the last pick.
+        new_picks = status[:picks].select { |pick| pick[:overall_pick].to_i > draft.last_pick.to_i }
+        if !new_picks.empty?
+          picks_to_update = []
+          slots_to_update = []
+          # Set the newly drafted players to picks and picks to slots 
+          new_picks.each do |pick|
+          
+            # TODO: Get batch inserts working in this method
+          
+            # Select the pick that corresponds to the latest pick(s)
+            system_pick = Pick.where(:draft_id => draft , :number => pick[:overall_pick]).first
+            # Link that pick to the player indicated in the response using id
+            picks_to_update << {:id => system_pick.id, :player_id => pick[:player][:id]}
+            # system_pick.update_attributes(:player_id => pick[:player][:id]) # need to consolidate queries
+
+            # Select all empty slots that this player could fill, and order it by id so he fills the first one.
+            slots = system_pick.team.slots.where(:eligible_positions => pick[:player][:position], :player_id => nil).order(:id)
+          
+            # Check to see if there are any active slots
+          
+            # Check to see if there are any open active spots.
+            if !slots.empty? # if there are slots accepting that position (have that eligible_position)
+              # If so, link that player to the first one
+              slot = slots.first
+              slots_to_update << { :id => slot.id, :player_id => pick[:player][:id] }
+              # slot.update_attributes(:player_id => pick[:player][:id]) # need to consolidate queries
+            else 
+              # Otherwise (if all of the slots accepting that position are filled), take the first RS slot
+              slot = system_pick.team.slots.where(:eligible_positions => "RS", :player_id => nil).order(:id).first
+              # And link him to that slot.
+              slots_to_update << { :id => slot.id, :player_id => pick[:player][:id] }
+              # slot.update_attributes(:player_id => pick[:player][:id]) if slot # need to consolidate queries
+            end
+          end
+
+          # Updates the new Pick and Slot attributes using upsert
+          binding.pry
+          UpdatesAndInserts.upsert(Pick, picks_to_update, :id)
+          UpdatesAndInserts.upsert(Slot, slots_to_update, :id)
+        
+          # Update the draft with the latest response, and the number of picks completed.
+          draft.update_attributes(:last_response_sha => current_response_sha, :last_pick => new_picks[-1][:overall_pick]) # single query
+        
+          # Return the response for the players updated.
+          new_picks # why do we need to return new_picks??? why not just true? ~Sung
+        else
+          puts "No new picks."
+          false 
+        end
+      else
+        # Return false if no players have been drafted since the last check                                                                                                          
+        false
+      end
     end
   end
 

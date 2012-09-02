@@ -45,7 +45,7 @@ class DraftsController < ApplicationController
     
     @user = User.find_by_cbs_id(cbs_id)
     
-    UpdatesAndInserts::UsersAndDrafts.upsert_all( :access_token => access, :cbs_id => cbs_id )
+    UpdatesAndInserts::UsersAndDrafts.update_draft( :access_token => access, :draft => @user.drafts.first )
     # Cbs::Draft.update(:access_token => access, :draft => @user.drafts.first)
     
     # For Players Partial
@@ -62,11 +62,12 @@ class DraftsController < ApplicationController
 
   end
 
-  def players(user)
-    players_drafted = []
-    user.drafts.first.drafted_players.each do |p|
-      players_drafted << p
+  private 
+    def players(user)
+      players_drafted = []
+      user.drafts.first.drafted_players.each do |p|
+        players_drafted << p
+      end
+      players_drafted
     end
-    players_drafted
-  end
 end
