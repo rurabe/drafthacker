@@ -14,8 +14,6 @@ class Team < ActiveRecord::Base
                   :abbr,
                   :owners,
                   :league_team_id, #CBS reports this as 'id'
-                  :slots_attributes,
-                  :owners_attributes,
                   :league_id,
                   :user_id,
                   :owner_hex_id # corresponds to cbs_hex_id of owner objects

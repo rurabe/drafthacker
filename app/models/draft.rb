@@ -10,8 +10,6 @@ class Draft < ActiveRecord::Base
                   :start_time,
                   :last_response_sha,
                   :last_pick,
-                  :league_attributes,
-                  :rounds_attributes,
                   :user_id 
 
   # after_create :link_picks

@@ -29,9 +29,6 @@ class League < ActiveRecord::Base
                   :timer_end,
                   :draft_state,
                   :timestamp,
-                  :teams_attributes,
                   :draft_id
-
-
 
 end

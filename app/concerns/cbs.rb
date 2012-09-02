@@ -89,82 +89,82 @@ module Cbs
     end
   end
 
-  class Players #--------------------------------------------------------------------------------------------------------
-    extend ApiCall
-
-    def self.populate_all
-      populate
-      populate_adp
-      populate_auction_values
-    end
-
-    # Populates the db with all players or updates them if they already exist. Approximately 2827 total.
-    def self.populate
-      players = json_response( { :api_call => 'players/list', :params => { :SPORT => "football" } } )[:body][:players]
-      update_or_create(players)
-    end
-
-    # Adds ADP information to Players
-    def self.populate_adp
-      players = json_response( { :api_call => 'players/average-draft-position', :params => { :SPORT => "football" } } )[:body][:average_draft_position][:players]
-      update_or_create(players)
-    end
-
-    #Adds Auction Values to Players
-    def self.populate_auction_values
-      # A brief discussion of these can be found at http://fantasynews.cbssports.com/fantasyfootball/rankings
-      update_or_create(build_auction_values,false)
-    end
-
-
-
-    private
-      def self.update_or_create(players,needs_cleaning=true)
-        # Take each player hash
-        players.each do |player|
-          # Clean the hash for reserved words and to match our schema
-          clean_hash(player) if needs_cleaning
-          # Where tries to find the object in the current records. If nil, it creates a new one.
-          player_obj = Player.where(:id => player[:id]).first_or_initialize(player)
-          # If the record is not new, run update attributes on it.
-          player_obj.update_attributes(player) if !player_obj.new_record?
-          # If it is a new object, save the record (since update_attributes saves by default)
-          player_obj.save if player_obj.new_record?
-        end
-      end
-
-      def self.clean_hash(hash)
-        #Certain keys from the CBS JSON response need to be reassigned for reserved words, conflicts, etc.
-        hash[:first_name] = hash.delete :firstname
-        hash[:last_name] = hash.delete :lastname
-        hash[:full_name] = hash.delete :fullname
-        if hash[:icons]
-          hash[:icons_headline] = hash[:icons][:headline]
-          hash[:icons_injury] = hash[:icons][:injury]
-          hash.delete :icons
-        end
-        hash
-      end
-
-      def self.build_auction_values
-        # The various types of auction values available to us.
-        sources = ['cbs','cbs_ppr','dave_richard','dave_richard_ppr','jamey_eisenberg','jamey_eisenberg_ppr','nathan_zegura']
-        # An empty array for the results
-        auction_values = []
-        # So for each of these sources:
-        sources.each do |source|
-          # Get the data. It's in a weird format eg. {"187741": "23", "396811": "11"}
-          data = json_response( { :api_call => 'auction-values', :params => { :SPORT => "football",:source => source } } )[:body][:auction_values]
-          # Convert it into a more useful format
-          data.each do |k,v|
-            # Put these more useful hashes into the array
-            auction_values << {:id => k.to_s, "av_#{source}".to_sym => v }
-          end
-        end
-        # Return the array
-        auction_values
-      end
-  end
+  # class Players #--------------------------------------------------------------------------------------------------------
+  #   extend ApiCall
+  # 
+  #   def self.populate_all
+  #     populate
+  #     populate_adp
+  #     populate_auction_values
+  #   end
+  # 
+  #   # Populates the db with all players or updates them if they already exist. Approximately 2827 total.
+  #   def self.populate
+  #     players = json_response( { :api_call => 'players/list', :params => { :SPORT => "football" } } )[:body][:players]
+  #     # update_or_create(players)
+  #   end
+  # 
+  #   # Adds ADP information to Players
+  #   def self.populate_adp
+  #     json_response( { :api_call => 'players/average-draft-position', :params => { :SPORT => "football" } } )[:body][:average_draft_position][:players]
+  #     # update_or_create(players)
+  #   end
+  # 
+  #   #Adds Auction Values to Players
+  #   def self.populate_auction_values
+  #     # A brief discussion of these can be found at http://fantasynews.cbssports.com/fantasyfootball/rankings
+  #     update_or_create(build_auction_values,false)
+  #   end
+  # 
+  # 
+  # 
+  #   private
+  #     def self.update_or_create( players, needs_cleaning = true )
+  #       # Take each player hash
+  #       players.each do |player|
+  #         # Clean the hash for reserved words and to match our schema
+  #         clean_hash(player) if needs_cleaning
+  #         # Where tries to find the object in the current records. If nil, it creates a new one.
+  #         player_obj = Player.where(:id => player[:id]).first_or_initialize(player)
+  #         # If the record is not new, run update attributes on it.
+  #         player_obj.update_attributes(player) if !player_obj.new_record?
+  #         # If it is a new object, save the record (since update_attributes saves by default)
+  #         player_obj.save if player_obj.new_record?
+  #       end
+  #     end
+  # 
+  #     def self.clean_hash(hash)
+  #       #Certain keys from the CBS JSON response need to be reassigned for reserved words, conflicts, etc.
+  #       hash[:first_name] = hash.delete :firstname
+  #       hash[:last_name] = hash.delete :lastname
+  #       hash[:full_name] = hash.delete :fullname
+  #       if hash[:icons]
+  #         hash[:icons_headline] = hash[:icons][:headline]
+  #         hash[:icons_injury] = hash[:icons][:injury]
+  #         hash.delete :icons
+  #       end
+  #       hash
+  #     end
+  # 
+  #     def self.build_auction_values
+  #       # The various types of auction values available to us.
+  #       sources = ['cbs','cbs_ppr','dave_richard','dave_richard_ppr','jamey_eisenberg','jamey_eisenberg_ppr','nathan_zegura']
+  #       # An empty array for the results
+  #       auction_values = []
+  #       # So for each of these sources:
+  #       sources.each do |source|
+  #         # Get the data. It's in a weird format eg. {"187741": "23", "396811": "11"}
+  #         data = json_response( { :api_call => 'auction-values', :params => { :SPORT => "football",:source => source } } )[:body][:auction_values]
+  #         # Convert it into a more useful format
+  #         data.each do |k,v|
+  #           # Put these more useful hashes into the array
+  #           auction_values << {:id => k.to_s, "av_#{source}".to_sym => v }
+  #         end
+  #       end
+  #       # Return the array
+  #       auction_values
+  #     end
+  # end
 
 
 

@@ -25,8 +25,12 @@
             <tbody>
               <% @players.each do |player| %>
               <div id="<%= player.id %>_modal">
-              <tr class="player-row" id="<%= player.id %>" title="<%= player.full_name %>" data-content='<p>There is a <span class="label"><%= player.chance(@team.next_pick.number).round(2) %>%</span> chance that this player will still be available at pick <span class="badge"><%= @team.next_pick.number %></span> (your next pick).</p>'>
-              </div>
+			  <% if @team.next_pick %>
+              	<tr class="player-row" id="<%= player.id %>" title="<%= player.full_name %>" data-content='<p>There is a <span class="label"><%= player.chance(@team.next_pick.number).round(2) %>%</span> chance that this player will still be available at pick <span class="badge"><%= @team.next_pick.number %></span> (your next pick).</p>'>
+              <% else %>
+				<tr class="player-row" id="<%= player.id %>" title="<%= player.full_name %>" data-content='<p>You have zero remaining picks.</p>'>
+			  <% end %>
+				</div>
                 <td>
                   <span class="label important"><%= player.position %></span>
                 </td>
@@ -41,6 +45,7 @@
                 </td>
               </tr>
               <% end %>
+			
             </tbody>
           </table>
         </div>
@@ -109,9 +114,8 @@
 <p><%= @round.inspect %></p>
 <p><%= @pick.inspect %></p>
 
-<%= @mega_hash %>
 
-<!-- This is our ajax calls -->
+<!-- These are our ajax calls -->
 
 <script>
 
