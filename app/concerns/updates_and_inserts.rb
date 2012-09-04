@@ -51,8 +51,11 @@ module UpdatesAndInserts
         team_attr[:league_id] = league.id
         team_attr[:created_at] = Time.now
         team_attr[:updated_at] = Time.now
-        team_attr[:user_id] = user.id # bug: this will not work when we optimize for multiple users in the same league. we should delete the user_id column from the db
-
+        if team_attr[:logged_in_team]
+          team_attr[:user_id] = user.id
+          team_attr.delete(:logged_in_team)
+        end
+      
         if team_attr[:owners_attributes][0]
           team_attr[:owner_hex_id] = team_attr[:owners_attributes][0][:cbs_hex_id] if team_attr[:owners_attributes][0][:cbs_hex_id]
         end

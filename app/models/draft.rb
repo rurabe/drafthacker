@@ -42,11 +42,11 @@ class Draft < ActiveRecord::Base
 
   private
 
-    def link_picks
-      self.teams.each do |team|
-        self.picks.where(:league_team_id => team.league_team_id).update_all(:team_id => team, :draft_id => self)
-      end
-    end
+    # def link_picks
+    #   self.teams.each do |team|
+    #     self.picks.where(:league_team_id => team.league_team_id).update_all(:team_id => team, :draft_id => self)
+    #   end
+    # end
 
     def drafted_ids
       # Find the ids of all picks made

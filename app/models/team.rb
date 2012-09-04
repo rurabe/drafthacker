@@ -19,7 +19,7 @@ class Team < ActiveRecord::Base
                   :owner_hex_id # corresponds to cbs_hex_id of owner objects
 
 
-  after_create :link_to_user
+  # after_create :link_to_user
 
   def next_pick
     self.picks.where(:player_id => nil).order(:number).limit(1).first
@@ -27,8 +27,8 @@ class Team < ActiveRecord::Base
 
   private
 
-    def link_to_user
-      self.league.draft.user.team = self if self.logged_in_team
-    end
+    # def link_to_user
+    #   self.league.draft.user.team = self if self.logged_in_team
+    # end
 
 end
