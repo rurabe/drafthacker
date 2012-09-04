@@ -32,6 +32,7 @@ module UpdatesAndInserts
 
       # find or create user
       user = User.find_or_create_by_cbs_id( cbs_id )
+      user_id = user.id
 
       # find or create draft # bug: does not allow for users with more than one draft. Possible solution: match by user_id and name
       draft = Draft.find_or_create_by_user_id( user.id ) 
@@ -51,11 +52,13 @@ module UpdatesAndInserts
         team_attr[:league_id] = league.id
         team_attr[:created_at] = Time.now
         team_attr[:updated_at] = Time.now
+        team_attr[:user_id] = nil
+        
         if team_attr[:logged_in_team]
-          team_attr[:user_id] = user.id
+          team_attr[:user_id] = user_id
           team_attr.delete(:logged_in_team)
         end
-      
+        
         if team_attr[:owners_attributes][0]
           team_attr[:owner_hex_id] = team_attr[:owners_attributes][0][:cbs_hex_id] if team_attr[:owners_attributes][0][:cbs_hex_id]
         end
@@ -63,12 +66,16 @@ module UpdatesAndInserts
         # removes owners_attributes and slots_attributes
         teams_owners_attributes << team_attr.delete(:owners_attributes) if team_attr[:owners_attributes]
         team_attr.delete(:slots_attributes) if team_attr[:slots_attributes] # this should no longer be in the team_attributes hash
-            
+                
         team_attr
       end
           
-      UpdatesAndInserts.upsert( Team, teams_attributes, :league_team_id, :league_id )
-    
+      binding.pry
+      
+      UpdatesAndInserts.upsert( Team, teams_attributes, :league_id, :league_team_id )
+     
+      binding.pry
+     
        # santizes owners attributes to be compatible with the upsert method
        teams_owners_attributes.map! do |owners_attr|
          # owners_attr is an array of hashes

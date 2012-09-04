@@ -7,7 +7,7 @@ class Team < ActiveRecord::Base
   has_many    :owners
 
   attr_accessible :long_abbr,
-                  :logged_in_team,
+                  :logged_in_team, # we should take this out ~Sung
                   :short_name,
                   :name,
                   :logo,
