@@ -280,6 +280,9 @@ module UpdatesAndInserts
           hash[:icons_headline] = hash[:icons][:headline]
           hash[:icons_injury] = hash[:icons][:injury]
           hash.delete :icons
+        else
+          hash[:icons_headline] = nil
+          hash[:icons_injury] = nil
         end
         hash
       end
