@@ -1,111 +1,16 @@
 module UpdatesAndInserts
-
-  def self.upsert( activerecord_model, array_of_hashes, *index_columns )
-      if array_of_hashes.class == Array
-        binding.pry
-        Upsert.batch( activerecord_model.connection, activerecord_model.table_name ) do |upsert|
-          array_of_hashes.each do |hash|
-            index_hash = {}            
-            index_columns.each { |index_column| index_hash[index_column] = hash.delete(index_column) }      
-            upsert.row( index_hash, hash ) # This syntax is fine.                        
-          end          
-        end
-        
-      else
-        # :error => "you must provide an array of attribute hashes"
-      end
-    end
-
-  class Players
-    extend ApiCall
-    
-    def self.upsert_all
-      player_count = Player.count
-      
-      upsert_base
-      upsert_adp
-      upsert_auction_values
-      
-      new_player_count = Player.count
-      
-      # checks to see if the player count has changed
-      if player_count == new_player_count
-        puts "Player count is still #{new_player_count}"
-      else
-        puts "Player count is now #{new_player_count}. Player count has changed by #{new_player_count - player_count}"
-      end
-    
-      return true
-    end
-
-
-    # Upserts the db with all players or updates them if they already exist. Approximately 2827 total.
-    def self.upsert_base
-      #  {:bye_week=>"8", :firstname=>"Arian", :position=>"RB", :icons=>{:headline=>"Foster barrels into end zone"}, :lastname=>"Foster", :pro_status=>"A", :fullname=>"Arian Foster", :id=>"518611", :pro_team=>"HOU"}
-      players = json_response( { :api_call => 'players/list', :params => { :SPORT => "football" } } )[:body][:players]
-      clean_and_upsert(players)
-    end
-
-    # Upserts ADP information to Players
-    def self.upsert_adp
-      # {:pct=>"99.3", :bye_week=>"8", :firstname=>"Arian", :change=>0, :avg=>"1.84", :position=>"RB", :lastname=>"Foster", :high=>"1", :pro_status=>"A", :low=>"5", :fullname=>"Arian Foster", :id=>"518611", :rank=>1, :pro_team=>"HOU"}
-      players = json_response( { :api_call => 'players/average-draft-position', :params => { :SPORT => "football" } } )[:body][:average_draft_position][:players]    
-      clean_and_upsert(players)
-    end
-
-    # Upserts Auction Values to Players
-    def self.upsert_auction_values
-      # A brief discussion of these can be found at http://fantasynews.cbssports.com/fantasyfootball/rankings
-      auction_values = build_auction_values
-      clean_and_upsert(auction_values)
-    end
-
-    private
-      def self.clean_and_upsert( players, needs_cleaning = true )
-        # Take each player hash
-        players.map! do |player|
-          # Clean the hash for reserved words and to match our schema
-          clean_player_hash(player) if needs_cleaning
-        end
-        UpdatesAndInserts.upsert( Player, players, :id)
-      end
-
-      def self.clean_player_hash(hash)
-        # Certain keys from the CBS JSON response need to be reassigned for reserved words, conflicts, etc.
-        # hash[:id]         = hash[:id]
-        hash[:cbs_id]     = hash[:id] # might need to turn this into an integer
-        hash[:first_name] = hash.delete :firstname  if hash[:firstname]
-        hash[:last_name]  = hash.delete :lastname   if hash[:lastname]
-        hash[:full_name]  = hash.delete :fullname   if hash[:fullname]
-        hash[:created_at] = Time.now
-        hash[:updated_at] = Time.now
-        if hash[:icons]
-          hash[:icons_headline] = hash[:icons][:headline]
-          hash[:icons_injury] = hash[:icons][:injury]
-          hash.delete :icons
-        end
-        hash
-      end
-
-      def self.build_auction_values
-        # The various types of auction values available to us.
-        sources = ['cbs','cbs_ppr','dave_richard','dave_richard_ppr','jamey_eisenberg','jamey_eisenberg_ppr','nathan_zegura']
-        # An empty array for the results
-        auction_values = []
-        # So for each of these sources:
-        sources.each do |source|
-          # Get the data. It's in a weird format eg. {"187741": "23", "396811": "11"}
-          data = json_response( { :api_call => 'auction-values', :params => { :SPORT => "football",:source => source } } )[:body][:auction_values]
-          # Convert it into a more useful format e.g. {:cbs_id=>"396134", :av_cbs=>"7"}
-          data.each do |k,v|
-            # Put these more useful hashes into the array
-            auction_values << {:id => k.to_s, "av_#{source}".to_sym => v }
-          end
-        end
-        # Return the array
-        auction_values
-      end
-  end
+  
+  # Table of Contents
+  # UsersAndDrafts
+  #   def self.upsert_all
+  #   def self.update_draft
+  # Players
+  #   def self.upsert_all
+  #   def self.upsert_base
+  #   def self.upsert_adp
+  #   def self.upsert_auction_values
+  # def self.upsert
+  
   
   class UsersAndDrafts
     extend ApiCall
@@ -232,9 +137,10 @@ module UpdatesAndInserts
       # Setting variables out of the options hash
       draft = options.fetch(:draft)
       access_token = options.fetch(:access_token)
+      cbs_league_id = options.fetch(:cbs_league_id)
 
       # Get the JSON from the API
-      status = json_response( { :api_call => 'league/draft/results', :params => { :access_token => access_token } } ) [:body][:draft_results]
+      status = json_response( { :api_call => 'league/draft/results', :params => { :access_token => access_token, :league_id => cbs_league_id } } ) [:body][:draft_results]
 
       # Generate SHA hash from the response
       current_response_sha = Digest::SHA1.hexdigest(status.to_s)
@@ -249,9 +155,7 @@ module UpdatesAndInserts
           slots_to_update = []
           # Set the newly drafted players to picks and picks to slots 
           new_picks.each do |pick|
-          
-            # TODO: Get batch inserts working in this method
-          
+                      
             # Select the pick that corresponds to the latest pick(s)
             system_pick = Pick.where(:draft_id => draft , :number => pick[:overall_pick]).first
             # Link that pick to the player indicated in the response using id
@@ -279,7 +183,6 @@ module UpdatesAndInserts
           end
 
           # Updates the new Pick and Slot attributes using upsert
-          binding.pry
           UpdatesAndInserts.upsert(Pick, picks_to_update, :id)
           UpdatesAndInserts.upsert(Slot, slots_to_update, :id)
         
@@ -288,6 +191,7 @@ module UpdatesAndInserts
         
           # Return the response for the players updated.
           new_picks # why do we need to return new_picks??? why not just true? ~Sung
+
         else
           puts "No new picks."
           false 
@@ -298,5 +202,113 @@ module UpdatesAndInserts
       end
     end
   end
+
+  class Players
+    extend ApiCall
+    
+    def self.upsert_all
+      player_count = Player.count
+      
+      upsert_base
+      upsert_adp
+      upsert_auction_values
+      
+      new_player_count = Player.count
+      
+      # checks to see if the player count has changed
+      if player_count == new_player_count
+        puts "Player count is still #{new_player_count}"
+      else
+        puts "Player count is now #{new_player_count}. Player count has changed by #{new_player_count - player_count}"
+      end
+    
+      return true
+    end
+
+
+    # Upserts the db with all players or updates them if they already exist. Approximately 2827 total.
+    def self.upsert_base
+      #  {:bye_week=>"8", :firstname=>"Arian", :position=>"RB", :icons=>{:headline=>"Foster barrels into end zone"}, :lastname=>"Foster", :pro_status=>"A", :fullname=>"Arian Foster", :id=>"518611", :pro_team=>"HOU"}
+      players = json_response( { :api_call => 'players/list', :params => { :SPORT => "football" } } )[:body][:players]
+      clean_and_upsert(players)
+    end
+
+    # Upserts ADP information to Players
+    def self.upsert_adp
+      # {:pct=>"99.3", :bye_week=>"8", :firstname=>"Arian", :change=>0, :avg=>"1.84", :position=>"RB", :lastname=>"Foster", :high=>"1", :pro_status=>"A", :low=>"5", :fullname=>"Arian Foster", :id=>"518611", :rank=>1, :pro_team=>"HOU"}
+      players = json_response( { :api_call => 'players/average-draft-position', :params => { :SPORT => "football" } } )[:body][:average_draft_position][:players]    
+      clean_and_upsert(players)
+    end
+
+    # Upserts Auction Values to Players
+    def self.upsert_auction_values
+      # A brief discussion of these can be found at http://fantasynews.cbssports.com/fantasyfootball/rankings
+      auction_values = build_auction_values
+      clean_and_upsert(auction_values)
+    end
+
+    private
+      def self.clean_and_upsert( players, needs_cleaning = true )
+        # Take each player hash
+        players.map! do |player|
+          # Clean the hash for reserved words and to match our schema
+          clean_player_hash(player) if needs_cleaning
+        end
+        UpdatesAndInserts.upsert( Player, players, :id)
+      end
+
+      def self.clean_player_hash(hash)
+        # Certain keys from the CBS JSON response need to be reassigned for reserved words, conflicts, etc.
+        # hash[:id]         = hash[:id]
+        hash[:cbs_id]     = hash[:id] # might need to turn this into an integer
+        hash[:first_name] = hash.delete :firstname  if hash[:firstname]
+        hash[:last_name]  = hash.delete :lastname   if hash[:lastname]
+        hash[:full_name]  = hash.delete :fullname   if hash[:fullname]
+        hash[:created_at] = Time.now
+        hash[:updated_at] = Time.now
+        if hash[:icons]
+          hash[:icons_headline] = hash[:icons][:headline]
+          hash[:icons_injury] = hash[:icons][:injury]
+          hash.delete :icons
+        end
+        hash
+      end
+
+      def self.build_auction_values
+        # The various types of auction values available to us.
+        sources = ['cbs','cbs_ppr','dave_richard','dave_richard_ppr','jamey_eisenberg','jamey_eisenberg_ppr','nathan_zegura']
+        # An empty array for the results
+        auction_values = []
+        # So for each of these sources:
+        sources.each do |source|
+          # Get the data. It's in a weird format eg. {"187741": "23", "396811": "11"}
+          data = json_response( { :api_call => 'auction-values', :params => { :SPORT => "football",:source => source } } )[:body][:auction_values]
+          # Convert it into a more useful format e.g. {:cbs_id=>"396134", :av_cbs=>"7"}
+          data.each do |k,v|
+            # Put these more useful hashes into the array
+            auction_values << {:id => k.to_s, "av_#{source}".to_sym => v }
+          end
+        end
+        # Return the array
+        auction_values
+      end
+  end
+
+  private
+  
+    def self.upsert( activerecord_model, array_of_hashes, *index_columns )
+        if array_of_hashes.class == Array
+          Upsert.batch( activerecord_model.connection, activerecord_model.table_name ) do |upsert|
+            array_of_hashes.each do |hash|
+              index_hash = {}            
+              index_columns.each { |index_column| index_hash[index_column] = hash.delete(index_column) }      
+              upsert.row( index_hash, hash ) # This syntax is fine.                        
+            end          
+          end
+        
+        else
+          # :error => "you must provide an array of attribute hashes"
+        end
+      end
 
 end

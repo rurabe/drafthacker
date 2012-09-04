@@ -1,10 +1,10 @@
 class DraftsController < ApplicationController
 
-  def show
+  def show 
 
     if params['access_token'] == "" || params['access_token'] != true
       # params is a development set of params with symbolized_keys! # Updated 8/31/2012
-      params = {"access_token"=>"U2FsdGVkX19BZczZgzxwaKawHs15NSSb9bbJKqElEwMTh1CrTcqVjFDhmGaZkpv7GUfzPjMhP6DkFPRgAzko16iKOpk4KlDQb12EgfuDBzHGRvvMePudLxMnMJtJ2E8O", "user_id"=>"b2c7c77e1b22e0f4", "SPORT"=>"football", "league_id"=>"3531-h2h", "controller"=>"drafts", "action"=>"show"}.symbolize_keys!
+      params = {"access_token"=>"U2FsdGVkX1-6uSipqx6zr2Wbl1tAhBptpxYbELZzmpMIP80SYYp3LzbQVR5VP-zFDq9wXKgMyiYk85o6Bz1MLd1BqUVqh4wKtZXS86ntNQ0xrTdVnYt_0qUEliudArpj", "user_id"=>"b2c7c77e1b22e0f4", "SPORT"=>"football", "league_id"=>"3531-h2h", "controller"=>"drafts", "action"=>"show"}.symbolize_keys!
       access = params[:access_token]
       cbs_id = params[:user_id]
       league_name = params[:league_id]
@@ -34,10 +34,10 @@ class DraftsController < ApplicationController
     
     if params['access_token'] == "" || params['access_token'] != true
       # params is a development set of params with symbolized_keys! # Updated 8/31/2012
-      params = {"access_token"=>"U2FsdGVkX19BZczZgzxwaKawHs15NSSb9bbJKqElEwMTh1CrTcqVjFDhmGaZkpv7GUfzPjMhP6DkFPRgAzko16iKOpk4KlDQb12EgfuDBzHGRvvMePudLxMnMJtJ2E8O", "user_id"=>"b2c7c77e1b22e0f4", "SPORT"=>"football", "league_id"=>"3531-h2h", "controller"=>"drafts", "action"=>"show"}.symbolize_keys!
+      params = {"access_token"=>"U2FsdGVkX1-6uSipqx6zr2Wbl1tAhBptpxYbELZzmpMIP80SYYp3LzbQVR5VP-zFDq9wXKgMyiYk85o6Bz1MLd1BqUVqh4wKtZXS86ntNQ0xrTdVnYt_0qUEliudArpj", "user_id"=>"b2c7c77e1b22e0f4", "SPORT"=>"football", "league_id"=>"3531-h2h", "controller"=>"drafts", "action"=>"show"}.symbolize_keys!
       access = params[:access_token]
       cbs_id = params[:user_id]
-      league_name = params[:league_id]
+      # league_name = params[:league_id]
     else
       access = params['access_token']
       cbs_id = params['user_id']
@@ -45,7 +45,7 @@ class DraftsController < ApplicationController
     
     @user = User.find_by_cbs_id(cbs_id)
     
-    UpdatesAndInserts::UsersAndDrafts.update_draft( :access_token => access, :draft => @user.drafts.first )
+    UpdatesAndInserts::UsersAndDrafts.update_draft( :access_token => access, :draft => @user.drafts.first, :cbs_league_id => @user.drafts.first.league.name )
     # Cbs::Draft.update(:access_token => access, :draft => @user.drafts.first)
     
     # For Players Partial
@@ -59,10 +59,10 @@ class DraftsController < ApplicationController
     respond_to do |format|
       format.js
     end
-
   end
 
   private 
+  
     def players(user)
       players_drafted = []
       user.drafts.first.drafted_players.each do |p|
