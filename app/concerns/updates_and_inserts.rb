@@ -69,13 +69,9 @@ module UpdatesAndInserts
                 
         team_attr
       end
-          
-      binding.pry
-      
+                
       UpdatesAndInserts.upsert( Team, teams_attributes, :league_id, :league_team_id )
-     
-      binding.pry
-     
+          
        # santizes owners attributes to be compatible with the upsert method
        teams_owners_attributes.map! do |owners_attr|
          # owners_attr is an array of hashes
