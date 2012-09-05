@@ -1,18 +1,22 @@
 class DraftsController < ApplicationController
 
-  def show
+  def show 
 
-    if params['access_token']
-      @access = params['access_token']
-      @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => params['user_id'] } )
+    if params['access_token'] == "" || params['access_token'] != true
+      # params is a development set of params with symbolized_keys! # Updated 8/31/2012
+      params = {"access_token"=>"U2FsdGVkX1-6uSipqx6zr2Wbl1tAhBptpxYbELZzmpMIP80SYYp3LzbQVR5VP-zFDq9wXKgMyiYk85o6Bz1MLd1BqUVqh4wKtZXS86ntNQ0xrTdVnYt_0qUEliudArpj", "user_id"=>"b2c7c77e1b22e0f4", "SPORT"=>"football", "league_id"=>"3531-h2h", "controller"=>"drafts", "action"=>"show"}.symbolize_keys!
+      access = params[:access_token]
+      cbs_id = params[:user_id]
+      league_name = params[:league_id]
     else
-      @access = 'U2FsdGVkX18aZIiPj1bDgnVKMGj3oLAH_UOM4UKV5V-qy3pWPyQllCRECnyA2E1gkoyyQ7p5P1B1jY7jvM1hBOPtvcwS699H1GsSdVLYnbxyJAmtVcpcoyvfssEb3djz'
-      @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => 'b2c7c77e1b22e0f4' } )
+      access = params['access_token']
+      cbs_id = params['user_id']
     end
-    # @access = params[:access_token]
+    
     # @picks = Pick.all(:number)
-    @user = User.new(@mega_hash)
-    @user.save
+    
+    UpdatesAndInserts::UsersAndDrafts.upsert_all( :access_token => access, :cbs_id => cbs_id )
+    @user = User.find_by_cbs_id(cbs_id)
     @draft = @user.drafts.first
     @league = @draft.league
     @team = @user.team
@@ -22,13 +26,27 @@ class DraftsController < ApplicationController
     @players = @draft.undrafted_players
     @url = draft_url(@draft)
     @user_id = @user.cbs_id
-   
+
   end
 
   def update
-    @user = User.find(params[:user_id])
-
-    Cbs::Draft.update(:access_token => params[:access_token], :draft => @user.drafts.first)
+    
+    if params['access_token'] == "" || params['access_token'] != true
+      # params is a development set of params with symbolized_keys! # Updated 8/31/2012
+      params = {"access_token"=>"U2FsdGVkX1-6uSipqx6zr2Wbl1tAhBptpxYbELZzmpMIP80SYYp3LzbQVR5VP-zFDq9wXKgMyiYk85o6Bz1MLd1BqUVqh4wKtZXS86ntNQ0xrTdVnYt_0qUEliudArpj", "user_id"=>"b2c7c77e1b22e0f4", "SPORT"=>"football", "league_id"=>"3531-h2h", "controller"=>"drafts", "action"=>"show"}.symbolize_keys!
+      access = params[:access_token]
+      cbs_id = params[:user_id]
+      # league_name = params[:league_id]
+    else
+      access = params['access_token']
+      cbs_id = params['user_id']
+    end
+    
+    @user = User.find_by_cbs_id(cbs_id)
+    
+    UpdatesAndInserts::UsersAndDrafts.update_draft( :access_token => access, :draft => @user.drafts.first, :cbs_league_id => @user.drafts.first.league.name )
+    # Cbs::Draft.update(:access_token => access, :draft => @user.drafts.first)
+    
     # For Players Partial
     @team = @user.team
     @players_drafted = players(@user)
@@ -40,14 +58,15 @@ class DraftsController < ApplicationController
     respond_to do |format|
       format.js
     end
-
   end
 
-  def players(user)
-    players_drafted = []
-    user.drafts.first.drafted_players.each do |p|
-      players_drafted << p
+  private 
+  
+    def players(user)
+      players_drafted = []
+      user.drafts.first.drafted_players.each do |p|
+        players_drafted << p
+      end
+      players_drafted
     end
-    players_drafted
-  end
 end

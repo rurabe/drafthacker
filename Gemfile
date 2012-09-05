@@ -2,13 +2,18 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.7'
 gem 'pg', '~> 0.14.0'
-# gem 'devise', '~> 2.1.2'
 gem 'jquery-rails', '~> 2.0.2'
+gem 'thin', '~> 1.4.1'
+gem 'distribution'
+gem 'activerecord-import'
+gem 'upsert'
+gem 'rubystats'
+
+# gem 'devise', '~> 2.1.2'
 #gem 'json', '~> 1.7.4'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
-gem 'thin', '~> 1.4.1'
-gem 'rubystats'
+
 
 group :test, :development do
   gem 'simplecov', '~> 0.6.4'
@@ -22,6 +27,8 @@ group :test, :development do
   gem 'guard', '~> 1.3.0'
   gem 'guard-rspec', '~> 1.2.1'
   gem 'launchy', '~> 2.1.2'
+  
+  gem 'pry-rails'
 end
 
 # Gems used only for assets and not required

@@ -10,14 +10,9 @@ class Draft < ActiveRecord::Base
                   :start_time,
                   :last_response_sha,
                   :last_pick,
-                  :league_attributes,
-                  :rounds_attributes
+                  :user_id 
 
-  accepts_nested_attributes_for :league,
-                                :rounds
-
-
-  after_create :link_picks
+  # after_create :link_picks
 
   def build_feed
     this_draft = Draft.where(:id => self).includes(:picks,:teams,:rounds,:league).first
@@ -47,11 +42,11 @@ class Draft < ActiveRecord::Base
 
   private
 
-    def link_picks
-      self.teams.each do |team|
-        self.picks.where(:league_team_id => team.league_team_id).update_all(:team_id => team, :draft_id => self)
-      end
-    end
+    # def link_picks
+    #   self.teams.each do |team|
+    #     self.picks.where(:league_team_id => team.league_team_id).update_all(:team_id => team, :draft_id => self)
+    #   end
+    # end
 
     def drafted_ids
       # Find the ids of all picks made

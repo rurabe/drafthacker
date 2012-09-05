@@ -66,5 +66,8 @@ module Drafthacker
     # autoloads all files (modules) in app/concerns
     config.autoload_paths += %W(#{config.root}/app/concerns)
 
+    # autoloads all files (modules) in app/concerns
+    config.autoload_paths += %W(#{config.root}/app/concerns/cbs)
+
   end
 end

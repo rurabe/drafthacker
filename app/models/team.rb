@@ -7,20 +7,19 @@ class Team < ActiveRecord::Base
   has_many    :owners
 
   attr_accessible :long_abbr,
-                  :logged_in_team,
+                  :logged_in_team, # we should take this out ~Sung
                   :short_name,
                   :name,
                   :logo,
                   :abbr,
                   :owners,
                   :league_team_id, #CBS reports this as 'id'
-                  :slots_attributes,
-                  :owners_attributes
+                  :league_id,
+                  :user_id,
+                  :owner_hex_id # corresponds to cbs_hex_id of owner objects
 
-  accepts_nested_attributes_for :slots,
-                                :owners
 
-  after_create :link_to_user
+  # after_create :link_to_user
 
   def next_pick
     self.picks.where(:player_id => nil).order(:number).limit(1).first
@@ -28,8 +27,8 @@ class Team < ActiveRecord::Base
 
   private
 
-    def link_to_user
-      self.league.draft.user.team = self if self.logged_in_team
-    end
+    # def link_to_user
+    #   self.league.draft.user.team = self if self.logged_in_team
+    # end
 
 end

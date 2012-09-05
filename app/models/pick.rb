@@ -7,7 +7,9 @@ class Pick < ActiveRecord::Base
                   :league_team_id,  # eg 10 - This one is league specific
                   :team_id,          # eg 483
                   :draft_id,
-                  :player_id
+                  :player_id,
+                  :round_id,
+                  :round_number
 
 
   def to_feed_item

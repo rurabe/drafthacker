@@ -1,5 +1,8 @@
 require 'net/http'
+
 module Cbs
+  # DEPRECATION NOTICE: This module has been replaced by the UpdatesAndInserts module
+
 
   # This module is included in all the subsequent classes. It builds the request URL, adds the parameters, and returns 
   # the JSON response as a hash.
@@ -41,7 +44,7 @@ module Cbs
 
       # Get the JSON from the API
       status = json_response( { :api_call => 'league/draft/results', :params => { :access_token => access_token } } ) [:body][:draft_results]
-      
+
       # Generate SHA hash from the response
       current_response_sha = Digest::SHA1.hexdigest(status.to_s)
 
@@ -90,35 +93,35 @@ module Cbs
 
   class Players #--------------------------------------------------------------------------------------------------------
     extend ApiCall
-
+  
     def self.populate_all
       populate
       populate_adp
       populate_auction_values
     end
-
+  
     # Populates the db with all players or updates them if they already exist. Approximately 2827 total.
     def self.populate
       players = json_response( { :api_call => 'players/list', :params => { :SPORT => "football" } } )[:body][:players]
-      update_or_create(players)
+      # update_or_create(players)
     end
-
+  
     # Adds ADP information to Players
     def self.populate_adp
-      players = json_response( { :api_call => 'players/average-draft-position', :params => { :SPORT => "football" } } )[:body][:average_draft_position][:players]
-      update_or_create(players)
+      json_response( { :api_call => 'players/average-draft-position', :params => { :SPORT => "football" } } )[:body][:average_draft_position][:players]
+      # update_or_create(players)
     end
-
+  
     #Adds Auction Values to Players
     def self.populate_auction_values
       # A brief discussion of these can be found at http://fantasynews.cbssports.com/fantasyfootball/rankings
       update_or_create(build_auction_values,false)
     end
-
-
-
+  
+  
+  
     private
-      def self.update_or_create(players,needs_cleaning=true)
+      def self.update_or_create( players, needs_cleaning = true )
         # Take each player hash
         players.each do |player|
           # Clean the hash for reserved words and to match our schema
@@ -131,7 +134,7 @@ module Cbs
           player_obj.save if player_obj.new_record?
         end
       end
-
+  
       def self.clean_hash(hash)
         #Certain keys from the CBS JSON response need to be reassigned for reserved words, conflicts, etc.
         hash[:first_name] = hash.delete :firstname
@@ -144,7 +147,7 @@ module Cbs
         end
         hash
       end
-
+  
       def self.build_auction_values
         # The various types of auction values available to us.
         sources = ['cbs','cbs_ppr','dave_richard','dave_richard_ppr','jamey_eisenberg','jamey_eisenberg_ppr','nathan_zegura']
@@ -188,7 +191,7 @@ module Cbs
       }
     end
 
-    private
+    # private
 
 
       # API call to http://api.cbssports.com/fantasy/league/details ------------------------------
@@ -211,7 +214,7 @@ module Cbs
       def self.build_hash_fantasy_teams(access_token)
         teams = json_response({ :api_call => 'league/teams', :params => { :access_token => access_token } })[:body][:teams]
         # Create the slot array that gets assigned to each team
-        team_slots_array = build_slots_array(access_token)
+        #team_slots_array = build_slots_array(access_token)
 
         teams.map! do |team|
           # Id is already an attribute of team
@@ -224,7 +227,8 @@ module Cbs
           team[:owners_attributes].each { |owner| owner[:cbs_hex_id] = owner.delete :id }
 
           # Each team gets an slot array built for them
-          team.merge team_slots_array
+          #team.merge team_slots_array
+          team
         end
 
         teams
@@ -248,7 +252,8 @@ module Cbs
               slots_array << { :eligible_positions => "RS" }
             end
 
-            { :slots_attributes => slots_array }
+            # { :slots_attributes => slots_array }
+            slots_array
           end
 
       # API call to http://api.cbssports.com/fantasy/league/draft/order ------------------------------

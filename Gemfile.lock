@@ -22,6 +22,9 @@ GEM
       activesupport (= 3.2.7)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
+    activerecord-import (0.2.10)
+      activerecord (~> 3.0)
+      activerecord (~> 3.0)
     activeresource (3.2.7)
       activemodel (= 3.2.7)
       activesupport (= 3.2.7)
@@ -188,6 +191,7 @@ GEM
     uglifier (1.2.7)
       execjs (>= 0.3.0)
       multi_json (~> 1.3)
+    upsert (0.3.4)
     xpath (0.1.4)
       nokogiri (~> 1.3)
 
@@ -195,6 +199,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-import
   capybara (~> 1.1.2)
   coffee-rails (~> 3.2.1)
   fabricator (~> 0.0.5)
@@ -214,3 +219,4 @@ DEPENDENCIES
   thin (~> 1.4.1)
   twitter-bootstrap-rails (~> 2.1.2)
   uglifier (>= 1.0.3)
+  upsert
