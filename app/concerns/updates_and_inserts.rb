@@ -199,9 +199,9 @@ module UpdatesAndInserts
           new_picks # why do we need to return new_picks??? why not just true? ~Sung
 
         else
-          puts "No new picks."
           false 
         end
+        
       else
         # Return false if no players have been drafted since the last check                                                                                                          
         false

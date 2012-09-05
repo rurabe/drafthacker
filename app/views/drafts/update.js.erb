@@ -1,5 +1,4 @@
 //console.log("Inserting new HTML");
-<% unless UpdatesAndInserts::UsersAndDrafts.update_draft(:access_token => params[:access_token], :draft => @user.drafts.first ) %>
 	$('#roster').empty();
 	$('#roster').append(' <%=j render :partial => "roster" %>');
 
@@ -30,6 +29,5 @@
 
 	// Pop over
 	$('.player-row').popover();
-<% end %>
 
 //console.log("Finished inserting HTML");
