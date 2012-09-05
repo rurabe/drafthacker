@@ -30,7 +30,7 @@ class Draft < ActiveRecord::Base
 
   def drafted_players
     # Select all players with ids that have been drafted, sorted by pick order
-    Player.where(:id => drafted_ids, :position => self.teams.first.slots.pluck(:eligible_positions).uniq ).includes(:picks).order('picks.number')
+    Player.where(:id => drafted_ids, :position => self.teams.first.slots.pluck(:eligible_positions).uniq ).includes(:picks)
   end
 
   def undrafted_players
