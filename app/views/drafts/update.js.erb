@@ -22,9 +22,8 @@
 
 
 	<% @players_drafted.each do |player| %>
-		$('#<%= player.id %>').css('opacity', '0.4')
+		$('#<%= player.id %>_modal').css('opacity', '0.4')
 	<% end %>
 
-<% end %>
 
 //console.log("Finished inserting HTML");
