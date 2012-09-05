@@ -24,7 +24,7 @@
           <table class='table table-striped'>
             <tbody>
               <% @players.each do |player| %>
-                <tr class="ajaxPlayerRow" id="<%= player.id %>" title="<%= player.full_name %>" data-load="/players/<%= player.id %>?user=<%= @user.id %>">
+                <tr class="ajaxPlayerRow" id="<%= player.id %>" title="<%= player.full_name %>" data-load="/players/<%= player.id %>?team=<%= @team.id %>">
                   <td>
                     <span class="label important"><%= player.position %></span>
                   </td>
@@ -114,36 +114,39 @@
 <script>
 
 // Popovers
-
-    //todo - make the info fade in on successful ajax
     
     $('.ajaxPlayerRow').click(function(){
       // set el to the player row
       var el = $(this);
+
       // the css is more interesting and lives in the draft css.
       var loadingDiv = '<div class="loading"></div>'
-      console.log('popover got clicked');
+
       // defines the (loading) popover object and calls it with 'show'
       el.popover({content: loadingDiv,
                   trigger: 'manual',
-                  html: true}).popover('show');
+                  html: true})
+        .popover('show');
+
+      // Select the popover that just got created
       var playerPopover = $('.popover').last();
+
       // provides the method to close popovers by clicking on them
       playerPopover.click(function(){
         $(this).remove();
-        console.log('popover got shut');
       });
+      
       // ajax call to get the player data
       $.get(el.attr('data-load'), function(data){
+        // Select the div where the content should go
         var popoverWindow = playerPopover.children('.popover-inner')
                               .children('.popover-content')
                               .children('p')
                               .first();
-        // setTimeout for testing in development
-        // setTimeout(function(){
-          popoverWindow.empty();
-          popoverWindow.append(data).fadeIn();
-        // },1000)
+        // clear out the loading div  
+        popoverWindow.empty();
+        // replace it with the player data
+        popoverWindow.append(data).hide().fadeIn();
       });
     });
 

@@ -1,3 +1,3 @@
-<h3>There is a <%= @player.chance(@next_pick) %>% chance of <%= @player.full_name %> being available at your next pick (<%= @next_pick %>).</h3>
+<h3>There is a <%= @chances[:future_picks].first[1] %>% chance of <%= @player.full_name %> being available at your next pick (<%= @chances[:future_picks].first[0] %>).</h3>
 
 

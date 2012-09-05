@@ -6,7 +6,7 @@ class DraftsController < ApplicationController
       @access = params['access_token']
       @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => params['user_id'] } )
     else
-      @access = 'U2FsdGVkX1-ujJ6DC9SBDxtKSd_FP0UTTVa2cOz0isM0pL08oRWdqs6GiY0NxHWiIhhtnO2H4TE5dtF1tYktibTijl2VIz2wQTlizKPNxLnqkaywc1SO3yZqpQc_ehNX'
+      @access = 'U2FsdGVkX18aZIiPj1bDgnVKMGj3oLAH_UOM4UKV5V-qy3pWPyQllCRECnyA2E1gkoyyQ7p5P1B1jY7jvM1hBOPtvcwS699H1GsSdVLYnbxyJAmtVcpcoyvfssEb3djz'
       @mega_hash = Cbs::League.build_mega_hash( { :access_token => @access, :cbs_id => 'b2c7c77e1b22e0f4' } )
     end
     # @access = params[:access_token]

@@ -31,12 +31,23 @@ class Player < ActiveRecord::Base
                   :av_jamey_eisenberg_ppr, # Auction Values
                   :av_nathan_zegura        # Auction Values
 
-  def chance(input) # input is in the form of picks
-    if input.class == Array
-      input.inject({}) { |hash,pick| hash[pick] = normal(pick); hash }
+  def chance(team) # input is in the form of teams 
+    chances = {:past_picks => nil, :future_picks => nil}
+    picks = team.picks.order(:number)
+    past_picks = picks.where('player_id IS NOT NULL').pluck(:number)
+    future_picks = picks.where('player_id IS NULL').pluck(:number)
+    chances[:past_picks] = past_picks.inject({}) { |hash,pick| hash[pick] = normal(pick); hash }
+    
+    if picked?(team.league.draft)
+      chances[:future_picks] = future_picks.inject({}) { |hash,pick| hash[pick] = 0; hash }
     else
-      normal(input)
+      chances[:future_picks] = future_picks.inject({}) { |hash,pick| hash[pick] = normal(pick); hash }
     end
+    chances
+  end
+
+  def picked?(draft)
+    draft.drafted_players.include?(self)
   end
 
   private
