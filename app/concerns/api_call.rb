@@ -1,5 +1,7 @@
 require 'net/http'
 
+# This module builds the request URL, adds the parameters, and returns 
+# the JSON response as a hash for API calls to CBS Sports Football.
 module ApiCall #--------------------------------------------------------------------------------------------------------
 
   def json_response(options = {}) #eg { :api_call => 'league/details', :params => { :access_token => "csugvwu3298hfw9" } }
