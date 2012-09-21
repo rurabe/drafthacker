@@ -4,7 +4,7 @@ class DraftsController < ApplicationController
 
     if params['access_token'] == "" || params['access_token'] != true
       # params is a development set of params with symbolized_keys! # Updated 8/31/2012
-      params = {"access_token"=>"U2FsdGVkX1-6uSipqx6zr2Wbl1tAhBptpxYbELZzmpMIP80SYYp3LzbQVR5VP-zFDq9wXKgMyiYk85o6Bz1MLd1BqUVqh4wKtZXS86ntNQ0xrTdVnYt_0qUEliudArpj", "user_id"=>"b2c7c77e1b22e0f4", "SPORT"=>"football", "league_id"=>"3531-h2h", "controller"=>"drafts", "action"=>"show"}.symbolize_keys!
+      params = {"access_token"=>"U2FsdGVkX1_8IVLl3DJi73Ls34D60jXb-CD2wyk_UsodxIOkcUj3meGWEBq3X-ugMNXUYxS4lzuK8jY2IwioMrrXPDshvtRmobOx3KT2MgE8MCTg83TZlDA2Z4yrC1e4", "user_id"=>"b2c7c77e1b22e0f4", "SPORT"=>"football", "league_id"=>"3531-h2h", "controller"=>"drafts", "action"=>"show"}.symbolize_keys!
       access = params[:access_token]
       cbs_id = params[:user_id]
       league_name = params[:league_id]
@@ -34,7 +34,7 @@ class DraftsController < ApplicationController
     
     if params['access_token'] == "" || params['access_token'] != true
       # params is a development set of params with symbolized_keys! # Updated 8/31/2012
-      params = {"access_token"=>"U2FsdGVkX1-6uSipqx6zr2Wbl1tAhBptpxYbELZzmpMIP80SYYp3LzbQVR5VP-zFDq9wXKgMyiYk85o6Bz1MLd1BqUVqh4wKtZXS86ntNQ0xrTdVnYt_0qUEliudArpj", "user_id"=>"b2c7c77e1b22e0f4", "SPORT"=>"football", "league_id"=>"3531-h2h", "controller"=>"drafts", "action"=>"show"}.symbolize_keys!
+      params = {"access_token"=>"U2FsdGVkX1_8IVLl3DJi73Ls34D60jXb-CD2wyk_UsodxIOkcUj3meGWEBq3X-ugMNXUYxS4lzuK8jY2IwioMrrXPDshvtRmobOx3KT2MgE8MCTg83TZlDA2Z4yrC1e4", "user_id"=>"b2c7c77e1b22e0f4", "SPORT"=>"football", "league_id"=>"3531-h2h", "controller"=>"drafts", "action"=>"show"}.symbolize_keys!
       access = params[:access_token]
       cbs_id = params[:user_id]
       # league_name = params[:league_id]

@@ -1,4 +1,5 @@
 require 'spec_helper'
-include
 
-describe
+describe CBS do
+  
+end
