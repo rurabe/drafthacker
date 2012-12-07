@@ -66,8 +66,11 @@ module Drafthacker
     # autoloads all files (modules) in app/concerns
     config.autoload_paths += %W(#{config.root}/app/concerns)
 
-    # autoloads all files (modules) in app/concerns
+    # autoloads all files (modules) in app/concerns/cbs
     config.autoload_paths += %W(#{config.root}/app/concerns/cbs)
+    
+    # For Heroku deployment:
+    config.assets.initialize_on_precompile = false
 
   end
 end
